@@ -133,7 +133,7 @@ const MediaDetail = () => {
     dispatch(setGlobalLoading(true));
     getListRate();
     dispatch(setGlobalLoading(false));
-  }, []);
+  }, [user]);
   useEffect(() => {
     dispatch(setGlobalLoading(true));
     getUserFavorite()
@@ -141,7 +141,7 @@ const MediaDetail = () => {
         setListFavorites(res.favorites)})
       .catch((err) => console.log(err));
     dispatch(setGlobalLoading(false));
-  }, []);
+  }, [user]);
   
   const handleSeatSelect = (index) => {
     getListBooking();
@@ -447,13 +447,13 @@ const MediaDetail = () => {
                       {/* buttons */}
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                           <Rating
-                              name="rating"
-                              value={value}
-                              onChange={handleChange}
-                              precision={0.5}
-                              min={0}
-                              max={5}
-                              />
+                            name="rating"
+                            value={value}
+                            onChange={handleChange}
+                            precision={0.5}
+                            min={0}
+                            max={5}
+                            />
                           <Typography ml={2} variant="body2">{value * 2}</Typography>
                       </Box>
                       <Stack direction="row" spacing={1}>

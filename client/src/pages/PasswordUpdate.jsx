@@ -53,8 +53,8 @@ const PasswordUpdate = () => {
     if (response) {
       form.resetForm();
       navigate("/");
-      //dispatch(setUser(null));
-      //dispatch(setAuthModalOpen(true));
+      dispatch(setUser(null));
+      dispatch(setAuthModalOpen(true));
       toast.success("Đổi mật khẩu thành công!");
     }
   };

@@ -121,6 +121,7 @@ export const newFavorite = async (data) => {
 };
 export const getUserRating = async () => {
   const id = localStorage.getItem("userId");
+  if(id == null) return console.log("not find id");
   const res = await axios
     .get(`/user/ratings/${id}`)
     .catch((err) => console.log(err));
@@ -145,6 +146,7 @@ export const getUserBooking = async () => {
 };
 export const getUserFavorite = async () => {
   const id = localStorage.getItem("userId");
+  if(id == null) return console.log("Not find id");
   const res = await axios
     .get(`/user/favorites/${id}`)
     .catch((err) => console.log(err));
@@ -249,6 +251,7 @@ export const addMovie = async (data) => {
 
 export const getAdminById = async () => {
   const adminId = localStorage.getItem("adminId");
+  if(adminId == null) return console.log("Not find adminId");
   const res = await axios
     .get(`/admin/${adminId}`)
     .catch((err) => console.log(err));

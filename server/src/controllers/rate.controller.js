@@ -17,7 +17,7 @@ const addRate = async (req, res, next) => {
   if (!existingMovie) {
     return res.status(404).json({ message: "Movie Not Found With Given ID" });
   }
-  if (!user) {
+  if (!existingUser) {
     return res.status(404).json({ message: "User not found with given ID " });
   }
   let rating;
