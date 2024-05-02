@@ -33,6 +33,7 @@ const FavoriteItem = ({ favorite, onRemoved }) => {
       posterUrl={favorite.movie.posterUrl}
       releaseDate={dayjs(favorite.movie.releaseDate).format("DD-MM-YYYY")}
       title={favorite.movie.title}
+      rate={favorite.movie.averageRating}
     />
     <LoadingButton
       fullWidth
