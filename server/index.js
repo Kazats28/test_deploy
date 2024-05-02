@@ -8,7 +8,6 @@ import adminRoute from "./src/routes/admin.route.js";
 import bookingRoute from "./src/routes/booking.route.js";
 import favoriteRoute from "./src/routes/favorite.route.js";
 import rateRoute from "./src/routes/rate.route.js";
-import path from 'path';
 const app = express();
 
 app.use(cors());
