@@ -1,7 +1,7 @@
 import axios from "axios";
 import queryString from "query-string";
 
-const baseURL = "https://webn16-a8a4133f12c6.herokuapp.com";
+const baseURL = "https://webserver-e50j9gif5-vus-projects-55839e0e.vercel.app/";
 
 const publicClient = axios.create({
   baseURL,
