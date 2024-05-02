@@ -9,6 +9,7 @@ import {
   import { addMovie } from "../api-helpers/api-helpers";
   import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { LoadingButton } from "@mui/lab";
   const labelProps = {
     mt: 1,
     mb: 1,
@@ -44,6 +45,7 @@ import { toast } from "react-toastify";
     const [sat, setSat] = useState("");
     const [suns, setSuns] = useState([]);
     const [sun, setSun] = useState("");
+    const [isAddRequest, setIsAddRequest] = useState(false);
     const handChange = (event, index, arrayName) => {
       const { value } = event.target;
       switch (arrayName) {
@@ -162,12 +164,15 @@ import { toast } from "react-toastify";
         toast.error("Hãy nhập ít nhất một thể loại!");
         return;
       }
+      if(isAddRequest) return;
+      setIsAddRequest(true);
       addMovie({ ...inputs, actors, genres, backdrops, mons, tues, weds, thus, fris, sats, suns})
         .then((res) => {
           toast.success("Thêm phim thành công!");
           navigate("/");
           })
         .catch((err) => console.log(err));
+      setIsAddRequest(false);
     };
     return (
       <div>
@@ -640,7 +645,7 @@ import { toast } from "react-toastify";
                 </Box>
               ))}
             </Box>
-            <Button
+            <LoadingButton
               type="submit"
               variant="contained"
               sx={{
@@ -652,9 +657,10 @@ import { toast } from "react-toastify";
                 },
                 marginTop: 4
               }}
+              loading={isAddRequest}
             >
               THÊM PHIM
-            </Button>
+            </LoadingButton>
           </Box>
         </form>
       </div>

@@ -1,6 +1,5 @@
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { Grid, Modal, Rating } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, Chip, Divider,FormLabel, TextField, Stack, Typography } from "@mui/material";
@@ -42,6 +41,7 @@ const MediaDetail = () => {
   const bookingsRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [value, setValue] = useState(0);
+  const [isBookingRequest, setIsBookingRequest] = useState(false);
   const handleChange = async (event, newValue) => {
     if(user){
       if(bookings.some(e => e.user == localStorage.getItem("userId"))){
@@ -154,20 +154,23 @@ const MediaDetail = () => {
     }));
   };   
   const handleSubmit = async (e) => {
+    if(isBookingRequest) return;
+    setIsBookingRequest(true);
     e.preventDefault();
     console.log(inputs);
     await newBooking({ ...inputs, movie: movie.id })
       .then((res) => toast.success("Đặt vé thành công!"))
       .catch((err) => console.log(err));
-    const newSeatBooking = seatBooking;
-    newSeatBooking[inputs.seatNumber - 1] = true;
-    setSeatBooking(newSeatBooking);
-    setSelectedSeats(Array(selectedSeats.length).fill(false));
-    handleClose();
-    setInputs((prevInputs) => ({
-      ...prevInputs,
-      seatNumber: ""
-    }));
+      const newSeatBooking = seatBooking;
+      newSeatBooking[inputs.seatNumber - 1] = true;
+      setSeatBooking(newSeatBooking);
+      setSelectedSeats(Array(selectedSeats.length).fill(false));
+      handleClose();
+      setInputs((prevInputs) => ({
+        ...prevInputs,
+        seatNumber: ""
+      }));
+    setIsBookingRequest(false);
   };
   const handleTimeSelect = (i) => {
     getListBooking();
@@ -544,9 +547,13 @@ const MediaDetail = () => {
                         <Box width={"80%"} marginTop={3}>
                           <form onSubmit={handleSubmit}>
                             <Box display="flex" >             
-                              <Button type="submit" sx={{margin: "auto",bgcolor: "#add8e6",":hover": {bgcolor: "#121217"}}}>
+                              <LoadingButton 
+                                type="submit" 
+                                sx={{margin: "auto",bgcolor: "#add8e6",":hover": {bgcolor: "#121217"}}}
+                                loading={isBookingRequest}
+                              >
                                 Thanh toán
-                              </Button>                 
+                              </LoadingButton>                 
                             </Box>
                           </form>
                         </Box>

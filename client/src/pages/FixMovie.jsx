@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Checkbox,
   FormLabel,
   TextField,
   Typography,
@@ -13,6 +12,7 @@ import { useDispatch} from "react-redux";
 import { setGlobalLoading } from "../redux/features/globalLoadingSlice";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { LoadingButton } from "@mui/lab";
 const labelProps = {
   mt: 1,
   mb: 1,
@@ -50,6 +50,7 @@ const FixMovie = () => {
   const [sun, setSun] = useState("");
   const [backdrops, setBackdrops] = useState([]);
   const [backdrop, setBackdrop] = useState("");
+  const [isFixRequest, setIsFixRequest] = useState(false);
   useEffect(() => {
     window.scrollTo(0, 0);
     dispatch(setGlobalLoading(true));
@@ -159,6 +160,8 @@ const FixMovie = () => {
     }));
   };
   const handleSubmit = (e) => {
+    if(isFixRequest) return;
+    setIsFixRequest(true);
     e.preventDefault();
     console.log(inputs);
     updateMovie({ ...inputs, actors, backdrops, genres, mons, tues, weds, thus, fris, sats, suns})
@@ -167,6 +170,7 @@ const FixMovie = () => {
         navigate("/");
       })
       .catch((err) => console.log(err));
+    setIsFixRequest(false);
   };
   return (
     <div>
@@ -639,7 +643,7 @@ const FixMovie = () => {
               </Box>
             ))}
           </Box>
-          <Button
+          <LoadingButton
             type="submit"
             variant="contained"
             sx={{
@@ -651,9 +655,10 @@ const FixMovie = () => {
               },
               marginTop: 4
             }}
+            loading={isFixRequest}
           >
             SỬA PHIM
-          </Button>
+          </LoadingButton>
         </Box>
       </form>
     </div>

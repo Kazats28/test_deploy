@@ -61,6 +61,9 @@ const BookingItem = ({ booking, onRemoved }) => {
             </Typography>
           </Link>
           <Typography variant="caption">
+            Mã số: {booking.id}
+          </Typography>
+          <Typography variant="caption">
             Thời gian đặt vé: {dayjs(booking.createdAt).format("HH:mm:ss DD/MM/YYYY")}
           </Typography>
           <Typography variant="caption">

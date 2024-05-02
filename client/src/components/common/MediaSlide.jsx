@@ -7,7 +7,7 @@ const MediaSlide = ({movies, type}) => {
   if(type == 2) movies.sort((a, b) => new Date(b.averageRating) - new Date(a.averageRating));
   return (
     <AutoSwiper>
-      {movies.map((movie, index) => (
+      {movies.slice(0, 10).map((movie, index) => (
         <SwiperSlide>
           <MediaItem
             key={index}
