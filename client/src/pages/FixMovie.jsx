@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch} from "react-redux";
 import { setGlobalLoading } from "../redux/features/globalLoadingSlice";
 import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 const labelProps = {
   mt: 1,
   mb: 1,
@@ -162,6 +163,7 @@ const FixMovie = () => {
     console.log(inputs);
     updateMovie({ ...inputs, actors, backdrops, genres, mons, tues, weds, thus, fris, sats, suns})
       .then((res) => {console.log(res);
+        toast.success("Sửa phim thành công!");
         navigate("/");
       })
       .catch((err) => console.log(err));

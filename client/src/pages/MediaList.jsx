@@ -37,15 +37,15 @@ const MediaList = () => {
       <Box sx={{ ...uiConfigs.style.mainContent }}>
         <Stack
           spacing={2}
-          direction={{ xs: "column", md: "row" }}
+          direction={{ xs: "row", md: "row" }}
           alignItems="center"
           justifyContent="space-between"
           sx={{ marginBottom: 4 }}
         >
-          <Typography fontWeight="700" variant="h5">
-            Tất cả phim
-          </Typography>
         </Stack>
+        <Typography fontWeight="700" variant="h5" marginBottom={4}>
+          Tất cả phim
+        </Typography>
          <MediaGrid
           medias={filteredMovies}
         />
