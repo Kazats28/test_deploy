@@ -155,9 +155,9 @@ const MediaDetail = () => {
     }));
   };   
   const handleSubmit = async (e) => {
+    e.preventDefault();
     if(isBookingRequest) return;
     setIsBookingRequest(true);
-    e.preventDefault();
     console.log(inputs);
     await newBooking({ ...inputs, movie: movie.id })
       .then((res) => toast.success("Đặt vé thành công!"))

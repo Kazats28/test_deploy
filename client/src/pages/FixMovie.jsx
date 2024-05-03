@@ -160,9 +160,9 @@ const FixMovie = () => {
     }));
   };
   const handleSubmit = async (e) => {
+    e.preventDefault();
     if(isFixRequest) return;
     setIsFixRequest(true);
-    e.preventDefault();
     console.log(inputs);
     await updateMovie({ ...inputs, actors, backdrops, genres, mons, tues, weds, thus, fris, sats, suns})
       .then((res) => {console.log(res);

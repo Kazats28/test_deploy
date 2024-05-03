@@ -31,7 +31,7 @@ const SigninFormAdmin = () => {
       setErrorMessage(undefined);
       setIsLoginRequest(true);
       console.log("");
-      sendAdminAuthRequest(values)
+      await sendAdminAuthRequest(values)
         .then((res) => {
           setSuccessLogin(true);     
           dispatch(setAdmin(res));

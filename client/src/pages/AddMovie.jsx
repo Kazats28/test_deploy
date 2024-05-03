@@ -130,49 +130,33 @@ import { LoadingButton } from "@mui/lab";
       }));
     };
     const handleSubmit = async (e) => {
+      e.preventDefault();
       if(!inputs.title){
-        toast.error("Hãy nhập tên phim!");
-        setIsAddRequest(false);
-        return;
+        return toast.error("Hãy nhập tên phim!");
       }
       if(!inputs.description){
-        toast.error("Hãy nhập mô tả phim!");
-        setIsAddRequest(false);
-        return;
+        return toast.error("Hãy nhập mô tả phim!");
       }
       if(!inputs.releaseDate){
-        toast.error("Hãy nhập ngày phát sóng!");
-        setIsAddRequest(false);
-        return;
+        return toast.error("Hãy nhập ngày phát sóng!");
       }
       if(!inputs.posterUrl){
-        toast.error("Hãy nhập posterUrl!");
-        setIsAddRequest(false);
-        return;
+        return toast.error("Hãy nhập posterUrl!");
       }
       if(!inputs.backgroundUrl){
-        toast.error("Hãy nhập backgroundUrl!");
-        setIsAddRequest(false);
-        return;
+        return toast.error("Hãy nhập backgroundUrl!");
       }
       if(!inputs.videoUrl){
-        toast.error("Hãy nhập videoUrl!");
-        setIsAddRequest(false);
-        return;
+        return toast.error("Hãy nhập videoUrl!");
       }
       if(actors.length < 1){
-        toast.error("Hãy nhập ít nhất một diễn viên!");
-        setIsAddRequest(false);
-        return;
+        return toast.error("Hãy nhập ít nhất một diễn viên!");
       }
       if(genres.length < 1){
-        toast.error("Hãy nhập ít nhất một thể loại!");
-        setIsAddRequest(false);
-        return;
+        return toast.error("Hãy nhập ít nhất một thể loại!");
       }
       if(isAddRequest) return;
       setIsAddRequest(true);
-      e.preventDefault();
       console.log(inputs);
       await addMovie({ ...inputs, actors, genres, backdrops, mons, tues, weds, thus, fris, sats, suns})
         .then((res) => {
