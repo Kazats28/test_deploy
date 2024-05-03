@@ -168,15 +168,16 @@ const MediaDetail = () => {
     await newBooking({ ...inputs, movie: movie.id })
       .then((res) => toast.success("Đặt vé thành công!"))
       .catch((err) => console.log(err));
-      const newSeatBooking = seatBooking;
-      newSeatBooking[inputs.seatNumber - 1] = true;
-      setSeatBooking(newSeatBooking);
-      setSelectedSeats(Array(selectedSeats.length).fill(false));
-      handleClose();
-      setInputs((prevInputs) => ({
-        ...prevInputs,
-        seatNumber: ""
-      }));
+    const newSeatBooking = seatBooking;
+    newSeatBooking[inputs.seatNumber - 1] = true;
+    setSeatBooking(newSeatBooking);
+    setSelectedSeats(Array(selectedSeats.length).fill(false));
+    handleClose();
+    setInputs((prevInputs) => ({
+      ...prevInputs,
+      seatNumber: ""
+    }));
+    getListBooking();
     setIsBookingRequest(false);
   };
   const handleTimeSelect = (i) => {
