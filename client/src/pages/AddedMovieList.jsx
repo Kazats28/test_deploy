@@ -14,10 +14,10 @@ import { getAdminById, deleteMovie } from "../api-helpers/api-helpers";
 import { Edit } from '@mui/icons-material';
 const MovieItem = ({ movie, onRemoved }) => {
   const [onRequest, setOnRequest] = useState(false);
-  const onRemove = () => {
+  const onRemove = async () => {
     if (onRequest) return;
     setOnRequest(true);
-    deleteMovie(movie.id)
+    await deleteMovie(movie.id)
       .then(() => {toast.success("Xóa phim thành công!");
       onRemoved(movie.id);})
       .catch((err) => console.log(err));

@@ -159,12 +159,12 @@ const FixMovie = () => {
       [e.target.name]: e.target.value,
     }));
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     if(isFixRequest) return;
     setIsFixRequest(true);
     e.preventDefault();
     console.log(inputs);
-    updateMovie({ ...inputs, actors, backdrops, genres, mons, tues, weds, thus, fris, sats, suns})
+    await updateMovie({ ...inputs, actors, backdrops, genres, mons, tues, weds, thus, fris, sats, suns})
       .then((res) => {console.log(res);
         toast.success("Sửa phim thành công!");
         setIsFixRequest(false);

@@ -129,11 +129,7 @@ import { LoadingButton } from "@mui/lab";
         [e.target.name]: e.target.value,
       }));
     };
-    const handleSubmit = (e) => {
-      if(isAddRequest) return;
-      setIsAddRequest(true);
-      e.preventDefault();
-      console.log(inputs);
+    const handleSubmit = async (e) => {
       if(!inputs.title){
         toast.error("Hãy nhập tên phim!");
         setIsAddRequest(false);
@@ -174,7 +170,11 @@ import { LoadingButton } from "@mui/lab";
         setIsAddRequest(false);
         return;
       }
-      addMovie({ ...inputs, actors, genres, backdrops, mons, tues, weds, thus, fris, sats, suns})
+      if(isAddRequest) return;
+      setIsAddRequest(true);
+      e.preventDefault();
+      console.log(inputs);
+      await addMovie({ ...inputs, actors, genres, backdrops, mons, tues, weds, thus, fris, sats, suns})
         .then((res) => {
           toast.success("Thêm phim thành công!");
           setIsAddRequest(false);
