@@ -130,46 +130,55 @@ import { LoadingButton } from "@mui/lab";
       }));
     };
     const handleSubmit = (e) => {
+      if(isAddRequest) return;
+      setIsAddRequest(true);
       e.preventDefault();
       console.log(inputs);
       if(!inputs.title){
         toast.error("Hãy nhập tên phim!");
+        setIsAddRequest(false);
         return;
       }
       if(!inputs.description){
         toast.error("Hãy nhập mô tả phim!");
+        setIsAddRequest(false);
         return;
       }
       if(!inputs.releaseDate){
         toast.error("Hãy nhập ngày phát sóng!");
+        setIsAddRequest(false);
         return;
       }
       if(!inputs.posterUrl){
         toast.error("Hãy nhập posterUrl!");
+        setIsAddRequest(false);
         return;
       }
       if(!inputs.backgroundUrl){
         toast.error("Hãy nhập backgroundUrl!");
+        setIsAddRequest(false);
         return;
       }
       if(!inputs.videoUrl){
         toast.error("Hãy nhập videoUrl!");
+        setIsAddRequest(false);
         return;
       }
       if(actors.length < 1){
         toast.error("Hãy nhập ít nhất một diễn viên!");
+        setIsAddRequest(false);
         return;
       }
       if(genres.length < 1){
         toast.error("Hãy nhập ít nhất một thể loại!");
+        setIsAddRequest(false);
         return;
       }
-      if(isAddRequest) return;
-      setIsAddRequest(true);
       addMovie({ ...inputs, actors, genres, backdrops, mons, tues, weds, thus, fris, sats, suns})
         .then((res) => {
           toast.success("Thêm phim thành công!");
-          navigate("/");
+          setIsAddRequest(false);
+          navigate("/listmovie");
           })
         .catch((err) => console.log(err));
       setIsAddRequest(false);

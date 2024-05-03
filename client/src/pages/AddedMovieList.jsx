@@ -121,14 +121,13 @@ const AddedMovieList = () => {
     dispatch(setGlobalLoading(true));
     getAdminById()
       .then((res) => {
-        setMovies(res.admin.addedMovies);
+        setMovies(res.admin.addedMovies.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)));
         setCount(res.admin.addedMovies.length);
-        setFilteredMovies(res.admin.addedMovies.slice(0, skip));
+        setFilteredMovies(res.admin.addedMovies.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)).slice(0, skip));
       })
       .catch((err) => console.log(err));
     dispatch(setGlobalLoading(false));
   }, []);
-
   const onLoadMore = () => {
     setFilteredMovies([...filteredMovies, ...[...movies].splice(page * skip, skip)]);
     setPage(page + 1);

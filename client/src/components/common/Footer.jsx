@@ -1,11 +1,15 @@
-import { Paper, Stack, Button, Box, Typography } from '@mui/material';
+import { Paper, Stack, Typography, IconButton } from '@mui/material';
 import React from 'react';
 import Container from './Container';
 import Logo from './Logo';
-import menuConfigs from "../../configs/menu.configs";
-import { Link } from "react-router-dom";
-
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 const Footer = () => {
+  const handleScrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  };
   return (
     <Container>
       <Paper square={true} sx={{ backgroundImage: "unset", padding: "2rem" }}>
@@ -21,19 +25,18 @@ const Footer = () => {
             <Typography>Giấy Chứng nhận đăng ký doanh nghiệp: 0123456789 đăng ký lần đầu ngày 30/04/2024, được cấp bởi Sở Kế hoạch và Đầu tư Thành phố Hà Nội</Typography>
             <Typography>Địa chỉ: Km10, Đường Nguyễn Trãi, Q.Hà Đông, Hà Nội, Việt Nam</Typography>
             <Typography>Đường dây nóng (Hotline): 1900 1009</Typography>
-          </Stack>
-          {/* <Box>
-            {menuConfigs.main.map((item, index) => (
-              <Button
-                key={index}
-                sx={{ color: "inherit" }}
-                component={Link}
-                to={item.path}
-              >
-                {item.display}
-              </Button>
-            ))}
-          </Box> */}
+          </Stack> 
+          <IconButton
+            onClick={handleScrollToTop}
+            sx={{
+              position: "absolute",
+              right: "1%",
+              backgroundColor: "#007bff",
+              color: "#fff"
+            }}
+          >
+            <KeyboardArrowUpIcon />
+          </IconButton>
         </Stack>
       </Paper>
     </Container>

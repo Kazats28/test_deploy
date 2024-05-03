@@ -167,7 +167,8 @@ const FixMovie = () => {
     updateMovie({ ...inputs, actors, backdrops, genres, mons, tues, weds, thus, fris, sats, suns})
       .then((res) => {console.log(res);
         toast.success("Sửa phim thành công!");
-        navigate("/");
+        setIsFixRequest(false);
+        navigate("/listmovie");
       })
       .catch((err) => console.log(err));
     setIsFixRequest(false);
