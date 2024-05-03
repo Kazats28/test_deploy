@@ -571,7 +571,7 @@ const MediaDetail = () => {
               {/* media backdrop */}
               {/* media videos */}
               <div style={{ paddingTop: "2rem" }}>
-                <Container header="Video Trailer">
+                <Container header="Trailer">
                   <MediaVideosSlide URL={movie.videoUrl} />
                 </Container>
               </div>

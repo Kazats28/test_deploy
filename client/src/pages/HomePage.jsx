@@ -31,7 +31,7 @@ const HomePage = () => {
           <MediaSlide movies={movies} type={1}/>
         </Container>
 
-        <Container header="Top đánh giá phim">
+        <Container header="Top đánh giá">
           <MediaSlide movies={movies} type={2}/>
         </Container>
       </Box>
