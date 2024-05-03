@@ -19,26 +19,24 @@ const CastSlide = ({ casts }) => {
       >
         {casts.map((cast, index) => (
           <SwiperSlide key={index}>
-            <Link>
+            <Box sx={{
+              paddingTop: "120%",
+              color: "text.primary",
+              ...uiConfigs.style.backgroundImage("https://i.postimg.cc/MTGcP28M/vd.jpg")
+            }}>
               <Box sx={{
-                paddingTop: "120%",
-                color: "text.primary",
-                ...uiConfigs.style.backgroundImage("https://i.postimg.cc/MTGcP28M/vd.jpg")
+                position: "absolute",
+                width: "100%",
+                height: "max-content",
+                bottom: 0,
+                padding: "10px",
+                backgroundColor: "rgba(0,0,0,0.6)"
               }}>
-                <Box sx={{
-                  position: "absolute",
-                  width: "100%",
-                  height: "max-content",
-                  bottom: 0,
-                  padding: "10px",
-                  backgroundColor: "rgba(0,0,0,0.6)"
-                }}>
-                  <Typography sx={{...uiConfigs.style.typoLines(1, "left")}}>
-                    {cast}
-                  </Typography>
-                </Box>
+                <Typography sx={{...uiConfigs.style.typoLines(1, "left")}}>
+                  {cast}
+                </Typography>
               </Box>
-            </Link>
+            </Box>
           </SwiperSlide>
         ))}
       </Swiper>

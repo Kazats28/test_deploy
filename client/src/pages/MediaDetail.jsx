@@ -35,6 +35,7 @@ const MediaDetail = () => {
   const [seatBooking, setSeatBooking] = useState(Array(selectedSeats.length).fill(false));
   let seatTemp;
   const [onRequest, setOnRequest] = useState(false);
+  const { admin } = useSelector((state) => state.admin);
   const { user} = useSelector((state) => state.user);
   const [listFavorites, setListFavorites] = useState([]);
   const [listRates, setListRates] = useState([]);
@@ -188,25 +189,25 @@ const MediaDetail = () => {
     setSelectedDay(newSelectedDay);
     switch (listDay[i].getDay()) {
       case 0:
-        setListTime(movie.suns);
+        setListTime(movie.suns.sort());
         break;
       case 1:
-        setListTime(movie.mons);
+        setListTime(movie.mons.sort());
         break;
       case 2:
-        setListTime(movie.tues);
+        setListTime(movie.tues.sort());
         break;
       case 3:
-        setListTime(movie.weds);
+        setListTime(movie.weds.sort());
         break;
       case 4:
-        setListTime(movie.thus);
+        setListTime(movie.thus.sort());
         break;
       case 5:
-        setListTime(movie.fris);
+        setListTime(movie.fris.sort());
         break;
       case 6:
-        setListTime(movie.sats);
+        setListTime(movie.sats.sort());
         break;
       default:
         break;
@@ -459,29 +460,31 @@ const MediaDetail = () => {
                             />
                           <Typography ml={2} variant="body2">{value * 2}</Typography>
                       </Box>
-                      <Stack direction="row" spacing={1}>
-                        <LoadingButton
-                          variant="text"
-                          sx={{
-                            width: "max-content",
-                            "& .MuiButon-starIcon": { marginRight: "0" }
-                          }}
-                          size="large"
-                          startIcon={listFavorites.some(e => e.movie.id.toString() === id.toString()) ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
-                          loadingPosition="start"
-                          loading={onRequest}
-                          onClick={onFavoriteClick}
-                          />
-                        <Button
-                          variant="contained"
-                          sx={{ width: "max-content" }}
-                          size="large"
-                          //startIcon={<PlayArrowIcon />}
-                          onClick={onBookingClick}
-                          >
-                          đặt vé
-                        </Button>
-                      </Stack>
+                      {!admin && (
+                        <Stack direction="row" spacing={1}>
+                          <LoadingButton
+                            variant="text"
+                            sx={{
+                              width: "max-content",
+                              "& .MuiButon-starIcon": { marginRight: "0" }
+                            }}
+                            size="large"
+                            startIcon={listFavorites.some(e => e.movie.id.toString() === id.toString()) ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
+                            loadingPosition="start"
+                            loading={onRequest}
+                            onClick={onFavoriteClick}
+                            />
+                          <Button
+                            variant="contained"
+                            sx={{ width: "max-content" }}
+                            size="large"
+                            //startIcon={<PlayArrowIcon />}
+                            onClick={onBookingClick}
+                            >
+                            đặt vé
+                          </Button>
+                        </Stack>
+                      )}
                       {/* buttons */}
     
                       {/* cast */}
@@ -516,7 +519,7 @@ const MediaDetail = () => {
                           <Typography
                             variant="h4"
                             >
-                            Pay with PayPal
+                            Trả bằng PayPal
                           </Typography>
                         </Stack>
                       </Box>

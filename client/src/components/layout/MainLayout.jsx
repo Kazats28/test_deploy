@@ -11,6 +11,7 @@ import userApi from "../../api/modules/user.api";
 import { setUser } from "../../redux/features/userSlice";
 import { getAdminById } from "../../api-helpers/api-helpers";
 import { setAdmin } from "../../redux/features/adminSlice";
+import ScrollToTopButton from "../common/ScrollToTopButton";
 const MainLayout = () => {
   const dispatch = useDispatch();
 
@@ -67,6 +68,7 @@ const MainLayout = () => {
       {/* footer */}
       <Footer />
       {/* footer */}
+      <ScrollToTopButton/>
     </>
   );
 };
