@@ -43,27 +43,33 @@ const MediaDetail = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [value, setValue] = useState(0);
   const [isBookingRequest, setIsBookingRequest] = useState(false);
+  const [isRateRequest, setIsRateRequest] = useState(false);
   const handleChange = async (event, newValue) => {
+    setValue(newValue);
     if(user){
+      if(isRateRequest) return;
       if(bookings.some(e => e.user == localStorage.getItem("userId"))){
         if(listRates.some(e => e.movie.id == id)){
+          setIsRateRequest(true);
           const temp = listRates.find(e => e.movie.id == id);
           await updateRate({rateId: temp.id, rate: newValue})
-          .then((res) => console.log(res))
-          .catch((err) => console.log(err));
+            .then((res) => console.log(res))
+            .catch((err) => console.log(err));
+          setIsRateRequest(false);
         }
         else{
+          setIsRateRequest(true);
           await addRate({rate: newValue, movie: movie.id})
           .then((res) => console.log(res))
           .catch((err) => console.log(err));
           getListRate();
+          setIsRateRequest(false);
         }
       }
       await updateAverageRating(id)
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
     }
-    setValue(newValue);
   };
   const handleOpen = () => {
     if(!inputs.seatNumber)
@@ -515,7 +521,12 @@ const MediaDetail = () => {
                   }}>
                     <Box sx={{ padding: 4, boxShadow: 24, backgroundColor: "background.paper" }}>
                       <Box sx={{ textAlign: "center", marginBottom: "2rem" }} >
-                        <Stack spacing={1}>
+                        <Stack spacing={1}>   
+                          <Typography
+                            variant="h5"
+                            >
+                            Tổng tiền: 30.000 vnd
+                          </Typography>               
                           <Typography
                             variant="h4"
                             >
