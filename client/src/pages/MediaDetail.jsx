@@ -526,7 +526,7 @@ const MediaDetail = () => {
                           <Typography
                             variant="h5"
                             >
-                            Tổng tiền: 30.000 vnd
+                            Tổng tiền: 50.000 vnd
                           </Typography>               
                           <Typography
                             variant="h4"

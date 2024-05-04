@@ -20,7 +20,7 @@ const HeroSlide = () => {
   useEffect(() => {
     dispatch(setGlobalLoading(true));
     getAllMovies()
-      .then((data) => setMovies(data.movies.slice(0, 4)))
+      .then((data) => setMovies(data.movies.sort((a, b) => b.bookings.length - a.bookings.length).slice(0, 4)))
       .catch((err) => console.log(err));
     dispatch(setGlobalLoading(false));
   }, []);
