@@ -8,7 +8,6 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-//axios.defaults.baseURL = "https://webn16-a8a4133f12c6.herokuapp.com";
 axios.defaults.baseURL = "https://webserver-rho.vercel.app";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

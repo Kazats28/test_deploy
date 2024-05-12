@@ -44,6 +44,13 @@ const MediaDetail = () => {
   const [value, setValue] = useState(0);
   const [isBookingRequest, setIsBookingRequest] = useState(false);
   const [isRateRequest, setIsRateRequest] = useState(false);
+  const [pay, setPay] = useState(true);
+  const handleSelect1 = () => {
+    setPay(true);
+  };
+  const handleSelect2 = () => {
+    setPay(false);
+  };
   const handleChange = async (event, newValue) => {
     setValue(newValue);
     if(user){
@@ -368,7 +375,6 @@ const MediaDetail = () => {
     setOnRequest(false);
   };
   const onBookingClick = () => {
-    if (!user) return dispatch(setAuthModalOpen(true));
     bookingsRef.current.scrollIntoView({ behavior: "smooth" });
   };
   const onRemoveFavorite = async () => {
@@ -521,43 +527,59 @@ const MediaDetail = () => {
                     outline: "none"
                   }}>
                     <Box sx={{ padding: 4, boxShadow: 24, backgroundColor: "background.paper" }}>
-                      <Box sx={{ textAlign: "center", marginBottom: "2rem" }} >
+                      <Box sx={{ textAlign: "center", marginBottom: "2rem" }}>
                         <Stack spacing={1}>   
                           <Typography
                             variant="h5"
                             >
                             Tổng tiền: 50.000 vnd
                           </Typography>               
-                          <Typography
-                            variant="h4"
-                            >
-                            Trả bằng PayPal
-                          </Typography>
                         </Stack>
                       </Box>
-                      <Stack spacing={1}>
-                        <FormLabel>Mã số thẻ</FormLabel>
-                        <TextField
-                          type="text"
-                          placeholder="XXXX-XXXX-XXXX-XXXX"
-                          fullWidth
-                          color="success"
-                        />
-                        <FormLabel>Ngày hết hạn</FormLabel>
-                        <TextField
-                          type="text"
-                          placeholder="MM/YY"
-                          fullWidth
-                          color="success"
-                        />
-                        <FormLabel>CVV</FormLabel>
-                        <TextField
-                          type="text"
-                          placeholder="XXX"
-                          fullWidth
-                          color="success"
+                      <Box display={"flex"} justifyContent={"center"}>
+                        <Button 
+                          sx={{ color: "white", bgcolor: pay ? "#ff0000" : "#add8e6", ":hover": { bgcolor: "#ff0000" }, marginRight: 1 }}
+                          onClick={handleSelect1}
+                        >
+                          Trả bằng PayPal
+                        </Button>
+                        <Button 
+                          sx={{ color: "white", bgcolor: !pay ? "#ff0000" : "#add8e6", ":hover": { bgcolor: "#ff0000" }, marginLeft: 1 }}
+                          onClick={handleSelect2}
+                        >
+                          Quét QR
+                        </Button>
+                      </Box>
+                      <Box display={"flex"} justifyContent={"center"} marginTop={2}>
+                      {!pay && (
+                          <img src="https://i.postimg.cc/s2nCfDw6/maqr.png" alt="QR" width="80%" />
+                      )}
+                      </Box>
+                      {pay && (
+                        <Stack spacing={1}>
+                          <FormLabel>Mã số thẻ</FormLabel>
+                          <TextField
+                            type="text"
+                            placeholder="XXXX-XXXX-XXXX-XXXX"
+                            fullWidth
+                            color="success"
                           />
-                      </Stack>
+                          <FormLabel>Ngày hết hạn</FormLabel>
+                          <TextField
+                            type="text"
+                            placeholder="MM/YY"
+                            fullWidth
+                            color="success"
+                          />
+                          <FormLabel>CVV</FormLabel>
+                          <TextField
+                            type="text"
+                            placeholder="XXX"
+                            fullWidth
+                            color="success"
+                            />
+                        </Stack>
+                      )}
                       <Box display="flex" justifyContent="center" >
                         <Box width={"80%"} marginTop={3}>
                           <form onSubmit={handleSubmit}>
@@ -566,7 +588,7 @@ const MediaDetail = () => {
                                 type="submit" 
                                 sx={{margin: "auto",bgcolor: "#add8e6",":hover": {bgcolor: "#121217"}}}
                                 loading={isBookingRequest}
-                              >
+                                >
                                 Thanh toán
                               </LoadingButton>                 
                             </Box>
@@ -593,7 +615,7 @@ const MediaDetail = () => {
               {/* media videos */}
               {/* media videos */}
               <div ref={bookingsRef} style={{ paddingTop: "2rem" }}>
-                {user && (
+                {(
                   <Container header="Đặt vé">
                     {movie && (
                       <Fragment>
