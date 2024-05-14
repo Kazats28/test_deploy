@@ -9,8 +9,10 @@ import {
   import { addMovie } from "../api-helpers/api-helpers";
   import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from 'axios';
 import { LoadingButton } from "@mui/lab";
+import { storage } from './firebaseConfig'; // Import cấu hình Firebase đã khởi tạo
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import UploadIcon from '@mui/icons-material/Upload';
   const labelProps = {
     mt: 1,
     mb: 1,
@@ -47,7 +49,9 @@ import { LoadingButton } from "@mui/lab";
     const [suns, setSuns] = useState([]);
     const [sun, setSun] = useState("");
     const [isAddRequest, setIsAddRequest] = useState(false);
-    const [selectedFile, setSelectedFile] = useState();
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [isUpload, setIsUpload] = useState(false);
     const handChange = (event, index, arrayName) => {
       const { value } = event.target;
       switch (arrayName) {
@@ -159,7 +163,9 @@ import { LoadingButton } from "@mui/lab";
       }
       if(isAddRequest) return;
       setIsAddRequest(true);
+      setIsUpload(true);
       handleVideoUpload();
+      while(isUpload);
       console.log(inputs);
       await addMovie({ ...inputs, actors, genres, backdrops, mons, tues, weds, thus, fris, sats, suns})
         .then((res) => {
@@ -174,26 +180,32 @@ import { LoadingButton } from "@mui/lab";
       setSelectedFile(event.target.files[0]);
     }
     const handleVideoUpload = async (event) => {
-      const file = selectedFile;
-      if (file && file.type.startsWith('video')) {
-        const formData = new FormData();
-        formData.append('video', file);
+      const video = selectedFile;
+      if (video) {
+        setIsUpload(true);
+        const storageRef = ref(storage, `videos/${video.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, video);
   
-        try {
-          const response = await axios.post('https://webserver-rho.vercel.app/upload', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          });
-          const videoURL = `https://webserver-rho.vercel.app/${response.data.filePath}`;
-          inputs.videoUrl = videoURL;
-          toast.success("Upload video thành công!");
-        } catch (error) {
-          console.error('Error uploading video:', error);
-          toast.error('Upload video thất bại!');
-        }
-      } else {
-        console.log('Please upload a valid video file');
+        uploadTask.on('state_changed', 
+          (snapshot) => {
+            // Theo dõi tiến trình upload
+            const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+            setUploadProgress(progress);
+          },
+          (error) => {
+            console.error(error);
+            toast.error("Upload Video thất bại!");
+          },
+          () => {
+            // Upload hoàn tất
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              console.log('File available at', downloadURL);
+              inputs.videoUrl = downloadURL;
+              toast.success("Upload Video thành công!");
+            });
+          }
+        );
+        setIsUpload(false);
       }
     };
     return (
@@ -248,6 +260,20 @@ import { LoadingButton } from "@mui/lab";
             />
             <FormLabel sx={labelProps}>Trailer</FormLabel>
             <input type="file" accept="video/*" onChange={handleSelectedFile} />
+            {uploadProgress > 0 && <p>Upload progress: {uploadProgress}%</p>}
+            <LoadingButton
+              variant="contained"
+              sx={{
+                marginTop: { xs: 1, md: 2 },
+                width: "max-content"
+              }}
+              startIcon={<UploadIcon />}
+              loadingPosition="start"
+              onClick={handleVideoUpload}
+              loading={isUpload}
+            >
+              Upload
+            </LoadingButton>
             <FormLabel sx={labelProps}>Backdrop URL</FormLabel>
             <Box display={"flex"} >
               <TextField

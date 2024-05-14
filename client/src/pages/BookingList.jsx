@@ -10,7 +10,7 @@ import uiConfigs from "../configs/ui.configs";
 import { setGlobalLoading } from "../redux/features/globalLoadingSlice";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { routesGen } from "../routes/routes";
-import {deleteBooking, getUserBooking, getUserDetails} from "../api-helpers/api-helpers";
+import {deleteBooking, getUserBooking } from "../api-helpers/api-helpers";
 const BookingItem = ({ booking, onRemoved }) => {
   const [onRequest, setOnRequest] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);

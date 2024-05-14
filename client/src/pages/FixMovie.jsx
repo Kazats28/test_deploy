@@ -13,8 +13,9 @@ import { setGlobalLoading } from "../redux/features/globalLoadingSlice";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { LoadingButton } from "@mui/lab";
-import axios from 'axios';
-
+import { storage } from './firebaseConfig'; // Import cấu hình Firebase đã khởi tạo
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import UploadIcon from '@mui/icons-material/Upload';
 const labelProps = {
   mt: 1,
   mb: 1,
@@ -53,7 +54,9 @@ const FixMovie = () => {
   const [backdrops, setBackdrops] = useState([]);
   const [backdrop, setBackdrop] = useState("");
   const [isFixRequest, setIsFixRequest] = useState(false);
-  const [selectedFile, setSelectedFile] = useState();
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUpload, setIsUpload] = useState(false);
   useEffect(() => {
     window.scrollTo(0, 0);
     dispatch(setGlobalLoading(true));
@@ -166,7 +169,6 @@ const FixMovie = () => {
     e.preventDefault();
     if(isFixRequest) return;
     setIsFixRequest(true);
-    handleVideoUpload();
     console.log(inputs);
     await updateMovie({ ...inputs, actors, backdrops, genres, mons, tues, weds, thus, fris, sats, suns})
       .then((res) => {console.log(res);
@@ -181,26 +183,32 @@ const FixMovie = () => {
     setSelectedFile(event.target.files[0]);
   }
   const handleVideoUpload = async (event) => {
-    const file = selectedFile;
-    if (file && file.type.startsWith('video')) {
-      const formData = new FormData();
-      formData.append('video', file);
+    const video = selectedFile;
+    if (video) {
+      setIsUpload(true);
+      const storageRef = ref(storage, `videos/${video.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, video);
 
-      try {
-        const response = await axios.post('https://webserver-rho.vercel.app/upload', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-        const videoURL = `https://webserver-rho.vercel.app/${response.data.filePath}`;
-        inputs.videoUrl = videoURL;
-        toast.success("Upload video thành công!");
-      } catch (error) {
-        console.error('Error uploading video:', error);
-        toast.error('Upload video thất bại!');
-      }
-    } else {
-      console.log('Please upload a valid video file');
+      uploadTask.on('state_changed', 
+        (snapshot) => {
+          // Theo dõi tiến trình upload
+          const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+          setUploadProgress(progress);
+        },
+        (error) => {
+          console.error(error);
+          toast.error("Upload Video thất bại!");
+        },
+        () => {
+          // Upload hoàn tất
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            console.log('File available at', downloadURL);
+            inputs.videoUrl = downloadURL;
+            toast.success("Upload Video thành công!");
+          });
+        }
+      );
+      setIsUpload(false);
     }
   };
   return (
@@ -255,6 +263,20 @@ const FixMovie = () => {
           />
           <FormLabel sx={labelProps}>Trailer</FormLabel>
           <input type="file" accept="video/*" onChange={handleSelectedFile} />
+          {uploadProgress > 0 && <p>Upload progress: {uploadProgress}%</p>}
+          <LoadingButton
+            variant="contained"
+            sx={{
+              marginTop: { xs: 1, md: 2 },
+              width: "max-content"
+            }}
+            startIcon={<UploadIcon />}
+            loadingPosition="start"
+            onClick={handleVideoUpload}
+            loading={isUpload}
+          >
+            Upload
+          </LoadingButton>
           <FormLabel sx={labelProps}>Backdrop URL</FormLabel>
             <Box display={"flex"} >
               <TextField
