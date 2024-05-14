@@ -671,7 +671,7 @@ const MediaDetail = () => {
               {/* media videos */}
               {/* media videos */}
               <div ref={bookingsRef} style={{ paddingTop: "2rem" }}>
-                {(
+                {!admin && (
                   <Container header="Đặt vé">
                     {movie && (
                       <Fragment>
