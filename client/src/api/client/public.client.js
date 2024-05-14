@@ -2,7 +2,6 @@ import axios from "axios";
 import queryString from "query-string";
 
 const baseURL = "https://webserver-rho.vercel.app";
-
 const publicClient = axios.create({
   baseURL,
   paramsSerializer: {

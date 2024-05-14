@@ -22,10 +22,10 @@ const MediaVideo = ({ Url }) => {
   );
 };
 
-const MediaVideosSlide = ({ URL }) => {
+const MediaVideos = ({ URL }) => {
   return (
     <MediaVideo Url={URL} />
   );
 };
 
-export default MediaVideosSlide;
+export default MediaVideos;

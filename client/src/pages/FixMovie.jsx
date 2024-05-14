@@ -13,6 +13,8 @@ import { setGlobalLoading } from "../redux/features/globalLoadingSlice";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { LoadingButton } from "@mui/lab";
+import axios from 'axios';
+
 const labelProps = {
   mt: 1,
   mb: 1,
@@ -51,6 +53,7 @@ const FixMovie = () => {
   const [backdrops, setBackdrops] = useState([]);
   const [backdrop, setBackdrop] = useState("");
   const [isFixRequest, setIsFixRequest] = useState(false);
+  const [selectedFile, setSelectedFile] = useState();
   useEffect(() => {
     window.scrollTo(0, 0);
     dispatch(setGlobalLoading(true));
@@ -163,6 +166,7 @@ const FixMovie = () => {
     e.preventDefault();
     if(isFixRequest) return;
     setIsFixRequest(true);
+    handleVideoUpload();
     console.log(inputs);
     await updateMovie({ ...inputs, actors, backdrops, genres, mons, tues, weds, thus, fris, sats, suns})
       .then((res) => {console.log(res);
@@ -172,6 +176,32 @@ const FixMovie = () => {
       })
       .catch((err) => console.log(err));
     setIsFixRequest(false);
+  };
+  const handleSelectedFile = (event) => {
+    setSelectedFile(event.target.files[0]);
+  }
+  const handleVideoUpload = async (event) => {
+    const file = selectedFile;
+    if (file && file.type.startsWith('video')) {
+      const formData = new FormData();
+      formData.append('video', file);
+
+      try {
+        const response = await axios.post('https://webserver-rho.vercel.app/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        const videoURL = `https://webserver-rho.vercel.app/${response.data.filePath}`;
+        inputs.videoUrl = videoURL;
+        toast.success("Upload video thành công!");
+      } catch (error) {
+        console.error('Error uploading video:', error);
+        toast.error('Upload video thất bại!');
+      }
+    } else {
+      console.log('Please upload a valid video file');
+    }
   };
   return (
     <div>
@@ -223,15 +253,8 @@ const FixMovie = () => {
               sx={{ width: "100%" }}
               autoFocus
           />
-          <FormLabel sx={labelProps}>Video URL</FormLabel>
-          <TextField
-              value={inputs.videoUrl}
-              onChange={handleChange}
-              name="videoUrl"
-              color="success"
-              sx={{ width: "100%" }}
-              autoFocus
-          />
+          <FormLabel sx={labelProps}>Trailer</FormLabel>
+          <input type="file" accept="video/*" onChange={handleSelectedFile} />
           <FormLabel sx={labelProps}>Backdrop URL</FormLabel>
             <Box display={"flex"} >
               <TextField

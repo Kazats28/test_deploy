@@ -17,7 +17,7 @@ import { setGlobalLoading } from "../redux/features/globalLoadingSlice";
 import { setAuthModalOpen } from "../redux/features/authModalSlice";
 
 import CastSlide from "../components/common/CastSlide";
-import MediaVideosSlide from "../components/common/MediaVideosSlide";
+import MediaVideos from "../components/common/MediaVideos";
 import BackdropSlide from "../components/common/BackdropSlide";
 import { getBookings, getMovieDetails, newBooking, getUserFavorite, newFavorite, deleteFavorite, addRate, updateRate, getUserRating, updateAverageRating} from "../api-helpers/api-helpers";
 import dayjs from "dayjs";
@@ -609,7 +609,7 @@ const MediaDetail = () => {
               {/* media videos */}
               <div style={{ paddingTop: "2rem" }}>
                 <Container header="Trailer">
-                  <MediaVideosSlide URL={movie.videoUrl} />
+                  <MediaVideos URL={movie.videoUrl} />
                 </Container>
               </div>
               {/* media videos */}

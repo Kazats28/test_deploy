@@ -9,6 +9,7 @@ import {
   import { addMovie } from "../api-helpers/api-helpers";
   import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import axios from 'axios';
 import { LoadingButton } from "@mui/lab";
   const labelProps = {
     mt: 1,
@@ -46,6 +47,7 @@ import { LoadingButton } from "@mui/lab";
     const [suns, setSuns] = useState([]);
     const [sun, setSun] = useState("");
     const [isAddRequest, setIsAddRequest] = useState(false);
+    const [selectedFile, setSelectedFile] = useState();
     const handChange = (event, index, arrayName) => {
       const { value } = event.target;
       switch (arrayName) {
@@ -147,7 +149,7 @@ import { LoadingButton } from "@mui/lab";
         return toast.error("Hãy nhập backgroundUrl!");
       }
       if(!inputs.videoUrl){
-        return toast.error("Hãy nhập videoUrl!");
+        return toast.error("Hãy chọn file Trailer!");
       }
       if(actors.length < 1){
         return toast.error("Hãy nhập ít nhất một diễn viên!");
@@ -157,6 +159,7 @@ import { LoadingButton } from "@mui/lab";
       }
       if(isAddRequest) return;
       setIsAddRequest(true);
+      handleVideoUpload();
       console.log(inputs);
       await addMovie({ ...inputs, actors, genres, backdrops, mons, tues, weds, thus, fris, sats, suns})
         .then((res) => {
@@ -166,6 +169,32 @@ import { LoadingButton } from "@mui/lab";
           })
         .catch((err) => console.log(err));
       setIsAddRequest(false);
+    };
+    const handleSelectedFile = (event) => {
+      setSelectedFile(event.target.files[0]);
+    }
+    const handleVideoUpload = async (event) => {
+      const file = selectedFile;
+      if (file && file.type.startsWith('video')) {
+        const formData = new FormData();
+        formData.append('video', file);
+  
+        try {
+          const response = await axios.post('https://webserver-rho.vercel.app/upload', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+          const videoURL = `https://webserver-rho.vercel.app/${response.data.filePath}`;
+          inputs.videoUrl = videoURL;
+          toast.success("Upload video thành công!");
+        } catch (error) {
+          console.error('Error uploading video:', error);
+          toast.error('Upload video thất bại!');
+        }
+      } else {
+        console.log('Please upload a valid video file');
+      }
     };
     return (
       <div>
@@ -217,15 +246,8 @@ import { LoadingButton } from "@mui/lab";
                 sx={{ width: "100%" }}
                 autoFocus
             />
-            <FormLabel sx={labelProps}>Video URL</FormLabel>
-            <TextField
-                value={inputs.videoUrl}
-                onChange={handleChange}
-                name="videoUrl"
-                color="success"
-                sx={{ width: "100%" }}
-                autoFocus
-            />
+            <FormLabel sx={labelProps}>Trailer</FormLabel>
+            <input type="file" accept="video/*" onChange={handleSelectedFile} />
             <FormLabel sx={labelProps}>Backdrop URL</FormLabel>
             <Box display={"flex"} >
               <TextField
