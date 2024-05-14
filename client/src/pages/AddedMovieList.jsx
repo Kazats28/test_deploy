@@ -12,7 +12,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { routesGen } from "../routes/routes";
 import { getAdminById, deleteMovie } from "../api-helpers/api-helpers";
 import { Edit } from '@mui/icons-material';
-import { getIn } from "formik";
+
 const MovieItem = ({ movie, onRemoved }) => {
   const [onRequest, setOnRequest] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -147,7 +147,7 @@ const AddedMovieList = () => {
   useEffect(() => {
     const getInformation = async () => {
       dispatch(setGlobalLoading(true));
-      getAdminById()
+      await getAdminById()
         .then((res) => {
           setMovies(res.admin.addedMovies.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)));
           setCount(res.admin.addedMovies.length);

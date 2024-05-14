@@ -136,7 +136,7 @@ const BookingList = () => {
   useEffect(() => {
     const getInformation = async () => {
       dispatch(setGlobalLoading(true));
-      getUserBooking()
+      await getUserBooking()
         .then((res) => {
           setBookings(res.bookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
           setCount(res.bookings.length);

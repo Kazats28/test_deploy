@@ -61,7 +61,7 @@ const FixMovie = () => {
     const getInformation = async () => {
       window.scrollTo(0, 0);
       dispatch(setGlobalLoading(true));
-      getMovieDetails(movieId) 
+      await getMovieDetails(movieId) 
         .then((res) => {
           inputs.title = res.movie.title;
           inputs.description = res.movie.description;

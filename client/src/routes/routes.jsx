@@ -89,7 +89,12 @@ const routes = [
   },
   {
     path: "/update/:id",
-    element: <FixMovie />
+    element: (
+      <ProtectedPageAdmin>
+        <FixMovie />
+      </ProtectedPageAdmin>
+    ),
+    state: "update"
   }
 ];
 

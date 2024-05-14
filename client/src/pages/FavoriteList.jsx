@@ -11,14 +11,13 @@ import { setGlobalLoading } from "../redux/features/globalLoadingSlice";
 import { getUserFavorite, deleteFavorite} from "../api-helpers/api-helpers";
 import dayjs from "dayjs";
 const FavoriteItem = ({ favorite, onRemoved }) => {
-  const dispatch = useDispatch();
 
   const [onRequest, setOnRequest] = useState(false);
 
   const onRemove = async () => {
     if (onRequest) return;
     setOnRequest(true);
-    deleteFavorite(favorite.id)
+    await deleteFavorite(favorite.id)
       .then((res) => {
         toast.success("Xóa phim yêu thích thành công!");
         onRemoved(favorite.id);
