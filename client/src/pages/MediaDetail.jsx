@@ -45,6 +45,8 @@ const MediaDetail = () => {
   const [isBookingRequest, setIsBookingRequest] = useState(false);
   const [isRateRequest, setIsRateRequest] = useState(false);
   const [pay, setPay] = useState(true);
+  const [isAppear, setIsAppear] = useState(false);
+  const [in4, setIn4] = useState("");
   const handleSelect1 = () => {
     setPay(true);
   };
@@ -88,6 +90,7 @@ const MediaDetail = () => {
   };
   const handleClose = () => {
     setIsOpen(false);
+    setIsAppear(false);
   };
   const getNextNDays = () => {
     const today = new Date();
@@ -173,7 +176,9 @@ const MediaDetail = () => {
     setIsBookingRequest(true);
     console.log(inputs);
     await newBooking({ ...inputs, movie: movie.id })
-      .then((res) => toast.success("Đặt vé thành công!"))
+      .then((res) => {toast.success("Đặt vé thành công!");
+        setIn4(res.booking);
+      })
       .catch((err) => console.log(err));
     const newSeatBooking = seatBooking;
     newSeatBooking[inputs.seatNumber - 1] = true;
@@ -186,6 +191,7 @@ const MediaDetail = () => {
     }));
     getListBooking();
     setIsBookingRequest(false);
+    setIsAppear(true);
   };
   const handleTimeSelect = (i) => {
     getListBooking();
@@ -594,6 +600,56 @@ const MediaDetail = () => {
                             </Box>
                           </form>
                         </Box>
+                      </Box>
+                    </Box>
+                  </Box>
+                </Modal>
+              </div>
+              <div>
+                <Modal
+                    open={isAppear}
+                    onClose={handleClose}
+                    >
+                  <Box sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: "100%",
+                    maxWidth: "600px",
+                    padding: 4,
+                    outline: "none"
+                  }}>
+                    <Box sx={{ padding: 4, boxShadow: 24, backgroundColor: "background.paper" }}>
+                      <Box sx={{ textAlign: "center", marginBottom: "2rem" }}>
+                        <Stack spacing={1}>
+                          <Typography variant="h5">
+                            Thông tin vé
+                          </Typography>
+                          <Typography variant="caption">
+                            Mã số: {in4.id}
+                          </Typography>
+                          <Typography variant="caption">
+                            Thời gian đặt vé: {dayjs(in4.createdAt).format("HH:mm:ss DD/MM/YYYY")}
+                          </Typography>
+                          <Typography variant="caption">
+                            Ngày chiếu phim: {dayjs(in4.date).format("DD/MM/YYYY")}
+                          </Typography>
+                          <Typography variant="caption">
+                            Giờ chiếu phim: {in4.hour}
+                          </Typography>
+                          <Typography variant="caption">
+                            Vị trí ghế: {in4.seatNumber}
+                          </Typography>
+                          <Box justifyContent={"center"}>
+                          <Button 
+                            variant="contained" 
+                            sx={{marginTop: 2, width: "max-content"}}
+                            onClick={handleClose}
+                            >
+                            OK
+                          </Button></Box>              
+                        </Stack>
                       </Box>
                     </Box>
                   </Box>
