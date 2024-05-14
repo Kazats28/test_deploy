@@ -5,7 +5,7 @@ import GlobalLoading from "../common/GlobalLoading";
 import Topbar from "../common/Topbar";
 import AuthModal from "../common/AuthModal";
 import AdminModal from "../common/AdminModal";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import userApi from "../../api/modules/user.api";
 import { setUser } from "../../redux/features/userSlice";
@@ -14,8 +14,6 @@ import { setAdmin } from "../../redux/features/adminSlice";
 import ScrollToTopButton from "../common/ScrollToTopButton";
 const MainLayout = () => {
   const dispatch = useDispatch();
-
-  const { user } = useSelector((state) => state.user);
 
   useEffect(() => {
     const authUser = async () => {
@@ -29,7 +27,7 @@ const MainLayout = () => {
   }, [dispatch]);
   useEffect(() => {
     const authAdmin = async () => {
-      getAdminById()
+      await getAdminById()
         .then((res) => {
           dispatch(setAdmin(res));
         })

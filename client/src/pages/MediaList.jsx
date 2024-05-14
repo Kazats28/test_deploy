@@ -15,14 +15,17 @@ const MediaList = () => {
   const skip = 12;
   
   useEffect(() => {
-    window.scrollTo(0, 0);
-    dispatch(setAppState("movie"));
-    dispatch(setGlobalLoading(true));
-    getAllMovies()
-      .then((data) => {setMovies(data.movies);
-      setFilteredMovies(data.movies.slice(0, skip));})
-      .catch((err) => console.log(err));
-    dispatch(setGlobalLoading(false));
+    const getMovies = async () => {
+      window.scrollTo(0, 0);
+      dispatch(setAppState("movie"));
+      dispatch(setGlobalLoading(true));
+      await getAllMovies()
+        .then((data) => {setMovies(data.movies);
+        setFilteredMovies(data.movies.slice(0, skip));})
+        .catch((err) => console.log(err));
+      dispatch(setGlobalLoading(false));
+    };
+    getMovies();
   }, []);
   const onLoadMore = () => {
     setFilteredMovies([...filteredMovies, ...[...movies].splice(page * skip, skip)]);

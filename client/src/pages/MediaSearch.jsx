@@ -12,9 +12,12 @@ const MediaSearch = () => {
   const [searchType, setSearchType] = useState(searchTypes[0]);
   const onChange = (selected) => setSearchType(selected);
   useEffect(() => {
-    getAllMovies()
-      .then((data) => setMovies(data.movies))
-      .catch((err) => console.log(err));
+    const getMovies = async () => {
+      await getAllMovies()
+        .then((data) => setMovies(data.movies))
+        .catch((err) => console.log(err));
+    };
+    getMovies();
   }, []);
   const onQueryChange = (e) => {
     const newQuery = e.target.value;

@@ -13,14 +13,17 @@ const HomePage = () => {
   const dispatch = useDispatch();
   const [movies, setMovies] = useState([]);
   useEffect(() => {
-    window.scrollTo(0, 0);
-    dispatch(setGlobalLoading(true));
-    getAllMovies()
-      .then((data) => {setMovies(data.movies);
-      localStorage.setItem("movies", data.movies);
-      })
-      .catch((err) => console.log(err));
-    dispatch(setGlobalLoading(false));
+    const getMovies = async () => {
+      window.scrollTo(0, 0);
+      dispatch(setGlobalLoading(true));
+      await getAllMovies()
+        .then((data) => {setMovies(data.movies);
+        localStorage.setItem("movies", data.movies);
+        })
+        .catch((err) => console.log(err));
+      dispatch(setGlobalLoading(false));
+    };
+    getMovies();
   }, []);
   return (
     <>

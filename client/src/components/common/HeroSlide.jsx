@@ -18,11 +18,14 @@ const HeroSlide = () => {
   const [movies, setMovies] = useState([]);
 
   useEffect(() => {
-    dispatch(setGlobalLoading(true));
-    getAllMovies()
-      .then((data) => setMovies(data.movies.sort((a, b) => b.bookings.length - a.bookings.length).slice(0, 4)))
-      .catch((err) => console.log(err));
-    dispatch(setGlobalLoading(false));
+    const getInformation = async () => {
+      dispatch(setGlobalLoading(true));
+      await getAllMovies()
+        .then((data) => setMovies(data.movies.sort((a, b) => b.bookings.length - a.bookings.length).slice(0, 4)))
+        .catch((err) => console.log(err));
+      dispatch(setGlobalLoading(false));
+    };
+    getInformation();
   }, []);
 
   return (

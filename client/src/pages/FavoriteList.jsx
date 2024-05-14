@@ -62,7 +62,7 @@ const FavoriteList = () => {
   useEffect(() => {
     const getFavorites = async () => {
       dispatch(setGlobalLoading(true));
-      getUserFavorite()
+      await getUserFavorite()
         .then((res) => {
           setCount(res.favorites.length);
           setFavorites([...res.favorites]);

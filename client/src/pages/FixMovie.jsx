@@ -58,29 +58,32 @@ const FixMovie = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUpload, setIsUpload] = useState(false);
   useEffect(() => {
-    window.scrollTo(0, 0);
-    dispatch(setGlobalLoading(true));
-    getMovieDetails(movieId) 
-      .then((res) => {
-        inputs.title = res.movie.title;
-        inputs.description = res.movie.description;
-        inputs.posterUrl = res.movie.posterUrl;
-        inputs.backgroundUrl = res.movie.backgroundUrl;
-        inputs.videoUrl = res.movie.videoUrl;
-        inputs.releaseDate = res.movie.releaseDate;
-        setActors(res.movie.actors);
-        setGenres(res.movie.genres);
-        setMons(res.movie.mons);
-        setTues(res.movie.tues);
-        setWeds(res.movie.weds);
-        setThus(res.movie.thus);
-        setFris(res.movie.thus);
-        setSats(res.movie.sats);
-        setSuns(res.movie.suns);
-        setBackdrops(res.movie.backdrops);
-      })
-      .catch((err) => console.log(err))
-    dispatch(setGlobalLoading(false));
+    const getInformation = async () => {
+      window.scrollTo(0, 0);
+      dispatch(setGlobalLoading(true));
+      getMovieDetails(movieId) 
+        .then((res) => {
+          inputs.title = res.movie.title;
+          inputs.description = res.movie.description;
+          inputs.posterUrl = res.movie.posterUrl;
+          inputs.backgroundUrl = res.movie.backgroundUrl;
+          inputs.videoUrl = res.movie.videoUrl;
+          inputs.releaseDate = res.movie.releaseDate;
+          setActors(res.movie.actors);
+          setGenres(res.movie.genres);
+          setMons(res.movie.mons);
+          setTues(res.movie.tues);
+          setWeds(res.movie.weds);
+          setThus(res.movie.thus);
+          setFris(res.movie.thus);
+          setSats(res.movie.sats);
+          setSuns(res.movie.suns);
+          setBackdrops(res.movie.backdrops);
+        })
+        .catch((err) => console.log(err))
+      dispatch(setGlobalLoading(false));
+    };
+    getInformation();
   }, [movieId]);
   const handChange = (event, index, arrayName) => {
     const { value } = event.target;

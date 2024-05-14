@@ -126,20 +126,26 @@ const MediaDetail = () => {
     .catch((err) => console.log(err));
   };
   useEffect(() => {
-    dispatch(setGlobalLoading(true));
-    updateAverageRating(id)
-      .then((res) => {console.log(res)})
-      .catch((err) => {console.log(err)});
-    dispatch(setGlobalLoading(false));
+    const getInformation = async () => {
+      dispatch(setGlobalLoading(true));
+      await updateAverageRating(id)
+        .then((res) => {console.log(res)})
+        .catch((err) => {console.log(err)});
+      dispatch(setGlobalLoading(false));
+    };
+    getInformation();
   }, []);
   useEffect(() => {
-    window.scrollTo(0, 0);
-    getNextNDays();
-    dispatch(setGlobalLoading(true));
-    getMovieDetails(id) 
-      .then((res) => setMovie(res.movie))
-      .catch((err) => console.log(err))
-    dispatch(setGlobalLoading(false));
+    const getInformation = async () => {
+      window.scrollTo(0, 0);
+      getNextNDays();
+      dispatch(setGlobalLoading(true));
+      await getMovieDetails(id) 
+        .then((res) => setMovie(res.movie))
+        .catch((err) => console.log(err))
+      dispatch(setGlobalLoading(false));
+    };
+    getInformation();
   }, [id]);
   useEffect(() => {
     dispatch(setGlobalLoading(true));
@@ -152,12 +158,15 @@ const MediaDetail = () => {
     dispatch(setGlobalLoading(false));
   }, [user]);
   useEffect(() => {
-    dispatch(setGlobalLoading(true));
-    getUserFavorite()
-      .then((res) => {
-        setListFavorites(res.favorites)})
-      .catch((err) => console.log(err));
-    dispatch(setGlobalLoading(false));
+    const getInformation = async () => {
+      dispatch(setGlobalLoading(true));
+      await getUserFavorite()
+        .then((res) => {
+          setListFavorites(res.favorites)})
+        .catch((err) => console.log(err));
+      dispatch(setGlobalLoading(false));
+    };
+    getInformation();
   }, [user]);
   
   const handleSeatSelect = (index) => {

@@ -134,15 +134,18 @@ const BookingList = () => {
   const skip = 3;
   
   useEffect(() => {
-    dispatch(setGlobalLoading(true));
-    getUserBooking()
-      .then((res) => {
-        setBookings(res.bookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
-        setCount(res.bookings.length);
-        setFilteredBookings(res.bookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, skip));
-      })
-      .catch((err) => console.log(err));
-    dispatch(setGlobalLoading(false));
+    const getInformation = async () => {
+      dispatch(setGlobalLoading(true));
+      getUserBooking()
+        .then((res) => {
+          setBookings(res.bookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+          setCount(res.bookings.length);
+          setFilteredBookings(res.bookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, skip));
+        })
+        .catch((err) => console.log(err));
+      dispatch(setGlobalLoading(false));
+    };
+    getInformation();
   }, []);
 
   const onLoadMore = () => {

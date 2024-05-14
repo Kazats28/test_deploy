@@ -12,6 +12,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { routesGen } from "../routes/routes";
 import { getAdminById, deleteMovie } from "../api-helpers/api-helpers";
 import { Edit } from '@mui/icons-material';
+import { getIn } from "formik";
 const MovieItem = ({ movie, onRemoved }) => {
   const [onRequest, setOnRequest] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -144,15 +145,18 @@ const AddedMovieList = () => {
   const skip = 3;
   
   useEffect(() => {
-    dispatch(setGlobalLoading(true));
-    getAdminById()
-      .then((res) => {
-        setMovies(res.admin.addedMovies.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)));
-        setCount(res.admin.addedMovies.length);
-        setFilteredMovies(res.admin.addedMovies.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)).slice(0, skip));
-      })
-      .catch((err) => console.log(err));
-    dispatch(setGlobalLoading(false));
+    const getInformation = async () => {
+      dispatch(setGlobalLoading(true));
+      getAdminById()
+        .then((res) => {
+          setMovies(res.admin.addedMovies.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)));
+          setCount(res.admin.addedMovies.length);
+          setFilteredMovies(res.admin.addedMovies.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)).slice(0, skip));
+        })
+        .catch((err) => console.log(err));
+      dispatch(setGlobalLoading(false));
+    };
+    getInformation();
   }, []);
   const onLoadMore = () => {
     setFilteredMovies([...filteredMovies, ...[...movies].splice(page * skip, skip)]);
