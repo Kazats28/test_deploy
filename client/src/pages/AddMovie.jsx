@@ -195,6 +195,7 @@ import UploadIcon from '@mui/icons-material/Upload';
           (error) => {
             console.error(error);
             toast.error("Upload Video thất bại!");
+            setIsUpload(false);
           },
           () => {
             // Upload hoàn tất
@@ -202,10 +203,10 @@ import UploadIcon from '@mui/icons-material/Upload';
               console.log('File available at', downloadURL);
               inputs.videoUrl = downloadURL;
               toast.success("Upload Video thành công!");
+              setIsUpload(false);
             });
           }
         );
-        setIsUpload(false);
       }
     };
     return (

@@ -201,6 +201,7 @@ const FixMovie = () => {
         (error) => {
           console.error(error);
           toast.error("Upload Video thất bại!");
+          setIsUpload(false);
         },
         () => {
           // Upload hoàn tất
@@ -208,10 +209,10 @@ const FixMovie = () => {
             console.log('File available at', downloadURL);
             inputs.videoUrl = downloadURL;
             toast.success("Upload Video thành công!");
+            setIsUpload(false);
           });
         }
       );
-      setIsUpload(false);
     }
   };
   return (
