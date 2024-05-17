@@ -139,7 +139,6 @@ const MediaDetail = () => {
         .then((res) => setMovie(res.movie))
         .catch((err) => console.log(err))
       dispatch(setGlobalLoading(false));
-      toast.success(`date: ${inputs.date}, seat: ${inputs.seatNumber}`);
     };
     getInformation();
   }, [id]);
@@ -165,7 +164,7 @@ const MediaDetail = () => {
     getInformation();
   }, [user]);
   useEffect(() => {
-    if(params){
+    if(params.get('vnp_ResponseCode')){
       if (params.get('vnp_ResponseCode') === '00') {
         handleSubmit();
         localStorage.removeItem('date');
