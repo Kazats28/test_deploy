@@ -165,13 +165,14 @@ const MediaDetail = () => {
   }, [user]);
   useEffect(() => {
     if(params){
-      if (params.get('vnp_ResponseCode') === '00') {
+      let temp = params.get('vnp_ResponseCode');
+      if (temp === '00') {
         handleSubmit();
         localStorage.removeItem('date');
         localStorage.removeItem('hour');
         localStorage.removeItem('seatNumber');
       }
-      else if(params.get('vnp_ResponseCode') !== '00'){
+      else if(temp !== '00' && temp != null && temp != undefined){
         toast.error("Đặt vé thất bại!");
       }
     }
