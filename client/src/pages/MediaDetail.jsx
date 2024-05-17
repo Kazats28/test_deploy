@@ -139,6 +139,7 @@ const MediaDetail = () => {
         .then((res) => setMovie(res.movie))
         .catch((err) => console.log(err))
       dispatch(setGlobalLoading(false));
+      toast.success(`date: ${inputs.date}, seat: ${inputs.seatNumber}`);
     };
     getInformation();
   }, [id]);
@@ -164,11 +165,24 @@ const MediaDetail = () => {
     getInformation();
   }, [user]);
   useEffect(() => {
-    if (params && params.get('vnp_ResponseCode') === '00') {
-      handleSubmit();
+    if(params){
+      if (params.get('vnp_ResponseCode') === '00') {
+        handleSubmit();
+        localStorage.removeItem('date');
+        localStorage.removeItem('hour');
+        localStorage.removeItem('seatNumber');
+      }
+      else{
+        toast.error("Đặt vé thất bại!");
+      }
+    }
+    else{
       localStorage.removeItem('date');
       localStorage.removeItem('hour');
       localStorage.removeItem('seatNumber');
+      inputs.date = "";
+      inputs.hour = "";
+      inputs.seatNumber = "";
     }
   }, [params]);
   const handleSeatSelect = (index) => {
@@ -220,6 +234,8 @@ const MediaDetail = () => {
       hour: listTime[i],
       seatNumber: ""
     }));
+    const newSelectedSeats = Array(selectedSeats.length).fill(false);
+    setSelectedSeats(newSelectedSeats);
   };  
   const handleDaySelect = (i) => {
     localStorage.setItem('date', listDay[i]);
