@@ -5,7 +5,7 @@ import { LoadingButton } from "@mui/lab";
 import { Box, Button, Chip, Divider,FormLabel, TextField, Stack, Typography } from "@mui/material";
 import React,{Fragment, useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation  } from "react-router-dom";
 import { toast } from "react-toastify";
 import CircularRate from "../components/common/CircularRate";
 import Container from "../components/common/Container";
@@ -21,11 +21,13 @@ import MediaVideos from "../components/common/MediaVideos";
 import BackdropSlide from "../components/common/BackdropSlide";
 import { getBookings, getMovieDetails, newBooking, getUserFavorite, newFavorite, deleteFavorite, addRate, updateRate, getUserRating, updateAverageRating} from "../api-helpers/api-helpers";
 import dayjs from "dayjs";
+import axios from 'axios';
 const MediaDetail = () => {
+  const amount = 10000;
   const id = useParams().id;
   const [movie, setMovie] = useState();
   const dispatch = useDispatch();
-  const [inputs, setInputs] = useState({ seatNumber: "", date: "", hour: "" });
+  const [inputs, setInputs] = useState({ seatNumber: localStorage.getItem('seatNumber')||"", date: localStorage.getItem('date')||"", hour: localStorage.getItem('hour')||"" });
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [selectedDay, setSelectedDay] = useState([]);
   const [listDay, setListDay] = useState([]);
@@ -42,17 +44,19 @@ const MediaDetail = () => {
   const bookingsRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [value, setValue] = useState(0);
-  const [isBookingRequest, setIsBookingRequest] = useState(false);
   const [isRateRequest, setIsRateRequest] = useState(false);
-  const [pay, setPay] = useState(true);
-  const [isAppear, setIsAppear] = useState(false);
   const [in4, setIn4] = useState("");
-  const handleSelect1 = () => {
-    setPay(true);
-  };
-  const handleSelect2 = () => {
-    setPay(false);
-  };
+  const location = useLocation();
+  const [params, setParams] = useState(null);
+  const [isRequest, setIsRequest] = useState(false);
+  useEffect(() => {
+    const fetchVnpayReturn = () => {
+      const params = new URLSearchParams(location.search);
+      setParams(params);
+    };
+    
+    fetchVnpayReturn();
+  }, [location]);
   const handleChange = async (event, newValue) => {
     setValue(newValue);
     if(user){
@@ -80,17 +84,8 @@ const MediaDetail = () => {
       .catch((err) => console.log(err));
     }
   };
-  const handleOpen = () => {
-    if(!inputs.seatNumber)
-    {
-      toast.error("Chưa chọn vị trí ngồi!");
-      return;
-    }
-    setIsOpen(true);
-  };
   const handleClose = () => {
     setIsOpen(false);
-    setIsAppear(false);
   };
   const getNextNDays = () => {
     const today = new Date();
@@ -168,8 +163,16 @@ const MediaDetail = () => {
     };
     getInformation();
   }, [user]);
-  
+  useEffect(() => {
+    if (params && params.get('vnp_ResponseCode') === '00') {
+      handleSubmit();
+      localStorage.removeItem('date');
+      localStorage.removeItem('hour');
+      localStorage.removeItem('seatNumber');
+    }
+  }, [params]);
   const handleSeatSelect = (index) => {
+    localStorage.setItem('seatNumber', index+1);
     getListBooking();
     const newSelectedSeats = Array(selectedSeats.length).fill(false);
     newSelectedSeats[index] = true;
@@ -179,40 +182,47 @@ const MediaDetail = () => {
       seatNumber: index + 1
     }));
   };   
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if(isBookingRequest) return;
-    setIsBookingRequest(true);
+  const handleSubmit = async () => {
+    if(isRequest) return;
+    if(inputs.date == "") return;
+    if(inputs.hour == "") return;
+    if(inputs.seatNumber == "") return;
     console.log(inputs);
-    await newBooking({ ...inputs, movie: movie.id })
+    toast.success(`seat: ${inputs.seatNumber}, date: ${inputs.date}, hour: ${inputs.hour}`);
+    setIsRequest(true);
+    await newBooking({ ...inputs, movie: id })
       .then((res) => {toast.success("Đặt vé thành công!");
         setIn4(res.booking);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => toast.error(err));
+    setIsRequest(false);
     const newSeatBooking = seatBooking;
     newSeatBooking[inputs.seatNumber - 1] = true;
     setSeatBooking(newSeatBooking);
     setSelectedSeats(Array(selectedSeats.length).fill(false));
-    handleClose();
     setInputs((prevInputs) => ({
       ...prevInputs,
-      seatNumber: ""
+      seatNumber: "",
+      hour: "",
+      date: ""
     }));
     getListBooking();
-    setIsBookingRequest(false);
-    setIsAppear(true);
+    setIsOpen(true);
   };
   const handleTimeSelect = (i) => {
+    localStorage.setItem('hour', listTime[i]);
     getListBooking();
     const newSelectedTime = Array(5).fill(false);
     newSelectedTime[i] = true;
     setSelectedTime(newSelectedTime);
     setInputs((prevState) => ({
       ...prevState,
-      hour: listTime[i]
+      hour: listTime[i],
+      seatNumber: ""
     }));
   };  
   const handleDaySelect = (i) => {
+    localStorage.setItem('date', listDay[i]);
     const newSelectedDay = Array(7).fill(false);
     newSelectedDay[i] = true;
     setSelectedDay(newSelectedDay);
@@ -245,7 +255,8 @@ const MediaDetail = () => {
     setInputs((prevState) => ({
       ...prevState,
       date: listDay[i],
-      hour: ""
+      hour: "",
+      seatNumber: ""
     }));
   };
   const renderTime = () => {
@@ -401,6 +412,17 @@ const MediaDetail = () => {
       .catch((err) => console.log(err));
     setOnRequest(false);
   };
+  const handlePayment = async () => {
+    if(!inputs.seatNumber)
+    {
+      toast.error("Chưa chọn vị trí ngồi!");
+      return;
+    }
+    const response = await axios.post('https://webserver-rho.vercel.app/booking/create_payment_url', { amount, id });
+    if (response.data.code === '00') { 
+        window.location.href = response.data.data;
+    }
+  };
   return (
     <div>
       {movie && 
@@ -543,94 +565,6 @@ const MediaDetail = () => {
                   }}>
                     <Box sx={{ padding: 4, boxShadow: 24, backgroundColor: "background.paper" }}>
                       <Box sx={{ textAlign: "center", marginBottom: "2rem" }}>
-                        <Stack spacing={1}>   
-                          <Typography
-                            variant="h5"
-                            >
-                            Tổng tiền: 50.000 vnd
-                          </Typography>               
-                        </Stack>
-                      </Box>
-                      <Box display={"flex"} justifyContent={"center"}>
-                        <Button 
-                          sx={{ color: "white", bgcolor: pay ? "#ff0000" : "#add8e6", ":hover": { bgcolor: "#ff0000" }, marginRight: 1 }}
-                          onClick={handleSelect1}
-                        >
-                          Trả bằng PayPal
-                        </Button>
-                        <Button 
-                          sx={{ color: "white", bgcolor: !pay ? "#ff0000" : "#add8e6", ":hover": { bgcolor: "#ff0000" }, marginLeft: 1 }}
-                          onClick={handleSelect2}
-                        >
-                          Quét QR
-                        </Button>
-                      </Box>
-                      <Box display={"flex"} justifyContent={"center"} marginTop={2}>
-                      {!pay && (
-                          <img src="https://i.postimg.cc/s2nCfDw6/maqr.png" alt="QR" width="80%" />
-                      )}
-                      </Box>
-                      {pay && (
-                        <Stack spacing={1}>
-                          <FormLabel>Mã số thẻ</FormLabel>
-                          <TextField
-                            type="text"
-                            placeholder="XXXX-XXXX-XXXX-XXXX"
-                            fullWidth
-                            color="success"
-                          />
-                          <FormLabel>Ngày hết hạn</FormLabel>
-                          <TextField
-                            type="text"
-                            placeholder="MM/YY"
-                            fullWidth
-                            color="success"
-                          />
-                          <FormLabel>CVV</FormLabel>
-                          <TextField
-                            type="text"
-                            placeholder="XXX"
-                            fullWidth
-                            color="success"
-                            />
-                        </Stack>
-                      )}
-                      <Box display="flex" justifyContent="center" >
-                        <Box width={"80%"} marginTop={3}>
-                          <form onSubmit={handleSubmit}>
-                            <Box display="flex" >             
-                              <LoadingButton 
-                                type="submit" 
-                                sx={{margin: "auto",bgcolor: "#add8e6",":hover": {bgcolor: "#121217"}}}
-                                loading={isBookingRequest}
-                                >
-                                Thanh toán
-                              </LoadingButton>                 
-                            </Box>
-                          </form>
-                        </Box>
-                      </Box>
-                    </Box>
-                  </Box>
-                </Modal>
-              </div>
-              <div>
-                <Modal
-                    open={isAppear}
-                    onClose={handleClose}
-                    >
-                  <Box sx={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    width: "100%",
-                    maxWidth: "600px",
-                    padding: 4,
-                    outline: "none"
-                  }}>
-                    <Box sx={{ padding: 4, boxShadow: 24, backgroundColor: "background.paper" }}>
-                      <Box sx={{ textAlign: "center", marginBottom: "2rem" }}>
                         <Stack spacing={1}>
                           <Typography variant="h5">
                             Thông tin vé
@@ -699,7 +633,7 @@ const MediaDetail = () => {
                             {renderDay()}
                           </Grid>
                         </Box>
-                        {inputs.date && (
+                        {inputs.date != "" && (
                           <Box>
                             <Box display={"flex"} justifyContent={"center"}>
                               <Typography
@@ -718,7 +652,7 @@ const MediaDetail = () => {
                             </Box>
                           </Box>
                         )}
-                        {inputs.hour && (
+                        {inputs.hour != "" && (
                           <Box>
                             <Box display={"flex"} justifyContent={"center"}>
                               <Typography
@@ -761,7 +695,7 @@ const MediaDetail = () => {
                             <Box display="flex" justifyContent="center" >
                               <Box width={"80%"} marginTop={3}>
                                 <Box display="flex" justifyContent={"center"}>             
-                                  <Button onClick={handleOpen} sx={{bgcolor: "#add8e6",":hover": {bgcolor: "#121217"}, width: {xs: "20%", sm:"15%", md:"10%"}}}>
+                                  <Button onClick={handlePayment} sx={{bgcolor: "#add8e6",":hover": {bgcolor: "#121217"}, width: {xs: "20%", sm:"15%", md:"10%"}}}>
                                     Đặt vé
                                   </Button>                 
                                 </Box>

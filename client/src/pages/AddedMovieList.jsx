@@ -142,7 +142,7 @@ const AddedMovieList = () => {
   const [count, setCount] = useState(0);
   const dispatch = useDispatch();
 
-  const skip = 3;
+  const skip = 8;
   
   useEffect(() => {
     const getInformation = async () => {
