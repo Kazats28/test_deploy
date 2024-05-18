@@ -434,7 +434,7 @@ const MediaDetail = () => {
       toast.error("Chưa chọn vị trí ngồi!");
       return;
     }
-    const response = await axios.post('http://localhost:8282/booking/create_payment_url', { amount, id });
+    const response = await axios.post('https://webserver-rho.vercel.app/booking/create_payment_url', { amount, id });
     if (response.data.code === '00') { 
         window.location.href = response.data.data;
     }
