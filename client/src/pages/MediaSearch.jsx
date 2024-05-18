@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import MediaGrid from "../components/common/MediaGrid.jsx";
 import uiConfigs from "../configs/ui.configs.js";
 import { getAllMovies } from "../api-helpers/api-helpers.js";
-
+import React from 'react';
 const searchTypes = ["tên phim", "thể loại", "diễn viên"];
 
 const MediaSearch = () => {

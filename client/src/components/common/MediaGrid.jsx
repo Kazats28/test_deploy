@@ -1,6 +1,7 @@
 import { Grid } from "@mui/material";
 import MediaItem from "./MediaItem.jsx";
 import dayjs from "dayjs";
+import React from 'react';
 const MediaGrid = ({ medias}) => {
   return (
     <Grid container spacing={1} sx={{ marginRight: "-8px!important" }}>

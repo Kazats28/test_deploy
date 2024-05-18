@@ -12,6 +12,7 @@ import { setUser } from "../../redux/features/userSlice.js";
 import { getAdminById } from "../../api-helpers/api-helpers.js";
 import { setAdmin } from "../../redux/features/adminSlice.js";
 import ScrollToTopButton from "../common/ScrollToTopButton.jsx";
+import React from 'react';
 const MainLayout = () => {
   const dispatch = useDispatch();
 

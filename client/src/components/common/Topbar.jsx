@@ -14,6 +14,7 @@ import Logo from "./Logo.jsx";
 import UserMenu from "./UserMenu.jsx";
 import Sidebar from "./Sidebar.jsx";
 import AdminMenu from "./AdminMenu.jsx";
+import React from 'react';
 const ScrollAppBar = ({ children, window }) => {
   const { themeMode } = useSelector((state) => state.themeMode);
   const trigger = useScrollTrigger({

@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../redux/features/userSlice.js";
 import { setAuthModalOpen } from "../redux/features/authModalSlice.js";
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import React from 'react';
 const PasswordUpdate = () => {
   const [onRequest, setOnRequest] = useState(false);
   const [showPassword, setShowPassword] = useState();

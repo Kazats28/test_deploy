@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { SwiperSlide } from "swiper/react";
 import NavigationSwiper from "./NavigationSwiper.jsx";
-
+import React from 'react';
 const BackdropSlide = ({ backdrops }) => {
   return (
     <NavigationSwiper>

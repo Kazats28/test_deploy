@@ -10,6 +10,7 @@ import AddedMovieList from "../pages/AddedMovieList.jsx";
 import ProtectedPageAdmin from "../components/common/ProtectedPageAdmin.jsx";
 import AddMovie from "../pages/AddMovie.jsx";
 import FixMovie from "../pages/FixMovie.jsx";
+import React from 'react';
 export const routesGen = {
   home: "/",
   mediaList: "/movie",

@@ -7,6 +7,7 @@ import MediaGrid from "../components/common/MediaGrid.jsx";
 import { setAppState } from "../redux/features/appStateSlice.js";
 import { setGlobalLoading } from "../redux/features/globalLoadingSlice.js";
 import { getAllMovies } from "../api-helpers/api-helpers.js";
+import React from 'react';
 const MediaList = () => {
   const dispatch = useDispatch();
   const [movies, setMovies] = useState([]);

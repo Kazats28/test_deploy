@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import uiConfigs from "../../configs/ui.configs.js";
 import { routesGen } from "../../routes/routes.jsx";
 import CircularRate from "./CircularRate.jsx";
-
+import React from 'react';
 const MediaItem = ({ title, releaseDate, posterUrl, id, rate }) => {
   return (
     <Link to={routesGen.mediaDetail(id)}>

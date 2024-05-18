@@ -1,6 +1,6 @@
 import { Box, useTheme } from "@mui/material";
 import uiConfigs from "../../configs/ui.configs.js";
-
+import React from 'react';
 const ImageHeader = ({ imgPath }) => {
   const theme = useTheme();
 

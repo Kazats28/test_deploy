@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { Swiper } from "swiper/react";
 import SwiperCore, { Navigation } from 'swiper';
-
+import React from 'react';
 SwiperCore.use([Navigation]);
 
 const AutoSwiper = ({ children }) => {

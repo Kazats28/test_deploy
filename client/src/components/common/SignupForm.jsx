@@ -9,6 +9,7 @@ import userApi from "../../api/modules/user.api.js";
 import { setAuthModalOpen } from "../../redux/features/authModalSlice.js";
 import { setUser } from "../../redux/features/userSlice.js";
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import React from 'react';
 const SignupForm = ({ switchAuthState }) => {
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState();

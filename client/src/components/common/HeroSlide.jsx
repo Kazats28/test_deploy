@@ -11,6 +11,7 @@ import { routesGen } from "../../routes/routes.jsx";
 import uiConfigs from "../../configs/ui.configs.js";
 import CircularRate from "./CircularRate.jsx";
 import {getAllMovies} from "../../api-helpers/api-helpers.js";
+import React from 'react';
 const HeroSlide = () => {
   const theme = useTheme();
   const dispatch = useDispatch();

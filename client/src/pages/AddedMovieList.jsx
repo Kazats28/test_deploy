@@ -12,7 +12,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { routesGen } from "../routes/routes.jsx";
 import { getAdminById, deleteMovie } from "../api-helpers/api-helpers.js";
 import { Edit } from '@mui/icons-material';
-
+import React from 'react';
 const MovieItem = ({ movie, onRemoved }) => {
   const [onRequest, setOnRequest] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);

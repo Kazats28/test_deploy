@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { IconButton } from "@mui/material";
 import { KeyboardArrowUp as KeyboardArrowUpIcon } from "@mui/icons-material";
-
+import React from 'react';
 const ScrollToTopButton = () => {
   const [isVisible, setIsVisible] = useState(false);
 

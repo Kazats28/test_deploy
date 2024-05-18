@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import menuConfigs from "../../configs/menu.configs.js";
 import { setAdmin } from "../../redux/features/adminSlice.js";
 import { useNavigate } from "react-router-dom";
+import React from 'react';
 const AdminMenu = () => {
   const { admin } = useSelector((state) => state.admin);
   const navigate = useNavigate();

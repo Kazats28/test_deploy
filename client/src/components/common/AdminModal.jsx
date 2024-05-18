@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setAdminModalOpen } from "../../redux/features/adminModalSlice.js";
 import Logo from "./Logo.jsx";
 import SigninFormAdmin from "./SigninFormAdmin.jsx";
-
+import React from 'react';
 const AdminModal = () => {
   const { adminModalOpen } = useSelector((state) => state.adminModal);
   const dispatch = useDispatch();

@@ -5,7 +5,7 @@ import { setAuthModalOpen } from "../../redux/features/authModalSlice.js";
 import Logo from "./Logo.jsx";
 import SigninForm from "./SigninForm.jsx";
 import SignupForm from "./SignupForm.jsx";
-
+import React from 'react';
 const actionState = {
   signin: "signin",
   signup: "signup"

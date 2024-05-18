@@ -1,5 +1,5 @@
 import { Box, Typography, Rating } from "@mui/material";
-
+import React from 'react';
 const CircularRate = ({ value }) => {
   return (
     <Box sx={{

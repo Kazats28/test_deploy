@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import menuConfigs from "../../configs/menu.configs.js";
 import { setUser } from "../../redux/features/userSlice.js";
 import { useNavigate } from "react-router-dom";
+import React from 'react';
 const UserMenu = () => {
   const { user } = useSelector((state) => state.user);
   const navigate = useNavigate();

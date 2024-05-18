@@ -1,6 +1,6 @@
 import { Typography, useTheme } from '@mui/material';
 import { Link } from 'react-router-dom';
-
+import React from 'react';
 const Logo = () => {
   const theme = useTheme();
 

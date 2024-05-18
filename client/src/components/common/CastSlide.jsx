@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
 import uiConfigs from "../../configs/ui.configs.js";
-
+import React from 'react';
 const CastSlide = ({ casts }) => {
   return (
     <Box sx={{

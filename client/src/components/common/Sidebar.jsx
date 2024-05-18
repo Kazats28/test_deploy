@@ -9,7 +9,7 @@ import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
 
 import { themeModes } from "../../configs/theme.configs.js";
 import { setThemeMode } from "../../redux/features/themeModeSlice.js";
-
+import React from 'react';
 const Sidebar = ({ open, toggleSidebar }) => {
   const dispatch = useDispatch();
 
