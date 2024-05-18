@@ -2,9 +2,9 @@ import path from "path";
 
 export default {
     mode: 'development', // hoặc 'production'
-    entry: './client/srcc/index.jsx',
+    entry: './client/src/index.jsx',
     output: {
-        path: path.resolve('E:\\Downloads\\Project\\client\\src'), // Sử dụng đường dẫn tuyệt đối trực tiếp
+        path: path.resolve('E:\\Downloads\\Project\\dist'), // Sử dụng đường dẫn tuyệt đối trực tiếp
         filename: 'bundle.js'
     },
     module: {
