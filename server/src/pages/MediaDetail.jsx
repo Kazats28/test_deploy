@@ -172,7 +172,10 @@ const MediaDetail = () => {
         localStorage.removeItem('hour');
         localStorage.removeItem('seatNumber');
       }
-      else if(temp !== '00' && temp != null && temp != undefined){
+      else if(temp === '24'){
+        toast.success("Hủy thanh toán thành công!");
+      }
+      else if(temp != null && temp != undefined){
         toast.error("Đặt vé thất bại!");
       }
     }
@@ -434,7 +437,7 @@ const MediaDetail = () => {
       toast.error("Chưa chọn vị trí ngồi!");
       return;
     }
-    const response = await axios.post('https://webserver-rho.vercel.app/booking/create_payment_url', { amount, id });
+    const response = await axios.post('http://localhost:8282/booking/create_payment_url', { amount, id });
     if (response.data.code === '00') { 
         window.location.href = response.data.data;
     }

@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import CircularRate from "../components/common/CircularRate.jsx";
 import Container from "../components/common/Container.jsx";
 import ImageHeader from "../components/common/ImageHeader.jsx";
-
+import QrCodeIcon from '@mui/icons-material/QrCode';
 import uiConfigs from "../configs/ui.configs.js";
 
 import { setGlobalLoading } from "../redux/features/globalLoadingSlice.js";
@@ -23,11 +23,15 @@ import { getBookings, getMovieDetails, newBooking, getUserFavorite, newFavorite,
 import dayjs from "dayjs";
 import axios from 'axios';
 const MediaDetail = () => {
+  const backEndUrl = "https://webserver-rho.vercel.app";
   const amount = 10000;
   const id = useParams().id;
   const [movie, setMovie] = useState();
   const dispatch = useDispatch();
-  const [inputs, setInputs] = useState({ seatNumber: localStorage.getItem('seatNumber')||"", date: localStorage.getItem('date')||"", hour: localStorage.getItem('hour')||"" });
+  const [inputs, setInputs] = useState({ 
+    seatNumber: localStorage.getItem('seatNumber') || "", 
+    date: localStorage.getItem('date') || "", 
+    hour: localStorage.getItem('hour') || "" });
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [selectedDay, setSelectedDay] = useState([]);
   const [listDay, setListDay] = useState([]);
@@ -49,12 +53,14 @@ const MediaDetail = () => {
   const location = useLocation();
   const [params, setParams] = useState(null);
   const [isRequest, setIsRequest] = useState(false);
+  const [isAppear, setIsAppear] = useState(false);
+  const [method, setMethod] = useState(localStorage.getItem('method') || 0);
+  const [isPayment, setIsPayment] = useState(false);
   useEffect(() => {
     const fetchVnpayReturn = () => {
       const params = new URLSearchParams(location.search);
       setParams(params);
     };
-    
     fetchVnpayReturn();
   }, [location]);
   const handleChange = async (event, newValue) => {
@@ -68,15 +74,15 @@ const MediaDetail = () => {
           await updateRate({rateId: temp.id, rate: newValue})
             .then((res) => console.log(res))
             .catch((err) => console.log(err));
-          setIsRateRequest(false);
-        }
-        else{
-          setIsRateRequest(true);
-          await addRate({rate: newValue, movie: movie.id})
-          .then((res) => console.log(res))
-          .catch((err) => console.log(err));
-          getListRate();
-          setIsRateRequest(false);
+            setIsRateRequest(false);
+          }
+          else{
+            setIsRateRequest(true);
+            await addRate({rate: newValue, movie: movie.id})
+            .then((res) => console.log(res))
+            .catch((err) => console.log(err));
+            getListRate();
+            setIsRateRequest(false);
         }
       }
       await updateAverageRating(id)
@@ -84,17 +90,26 @@ const MediaDetail = () => {
       .catch((err) => console.log(err));
     }
   };
+  const handleOpen = () => {
+    if(!inputs.seatNumber)
+      {
+        toast.error("Chưa chọn vị trí ngồi!");
+      return;
+    }
+    setIsAppear(true);
+  };
   const handleClose = () => {
     setIsOpen(false);
+    setIsAppear(false);
   };
   const getNextNDays = () => {
     const today = new Date();
     const result = [];
-  
+    
     for (let i = 0; i < 7; i++) {
       let nextDate = new Date(today);
       nextDate.setDate(today.getDate() + i);
-  
+      
       if (nextDate.getDate() < today.getDate() + i) {
         const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
         const daysToAdd = today.getDate() + i - lastDayOfMonth;
@@ -108,8 +123,8 @@ const MediaDetail = () => {
   };
   const getListBooking = async () => {
     await getBookings(id)
-      .then((res) => setBookings(res.booking))
-      .catch((err) => console.log(err));
+    .then((res) => setBookings(res.booking))
+    .catch((err) => console.log(err));
   };
   const getListRate = async () => {
     await getUserRating()
@@ -124,8 +139,8 @@ const MediaDetail = () => {
     const getInformation = async () => {
       dispatch(setGlobalLoading(true));
       await updateAverageRating(id)
-        .then((res) => {console.log(res)})
-        .catch((err) => {console.log(err)});
+      .then((res) => {console.log(res)})
+      .catch((err) => {console.log(err)});
       dispatch(setGlobalLoading(false));
     };
     getInformation();
@@ -163,26 +178,50 @@ const MediaDetail = () => {
     };
     getInformation();
   }, [user]);
+  const resetBooking = () => {
+    localStorage.removeItem('date');
+    localStorage.removeItem('hour');
+    localStorage.removeItem('seatNumber');
+    setMethod(0);
+    localStorage.setItem('method', 0);
+    setInputs((prevState) => ({
+      ...prevState,
+      seatNumber: "",
+      date: "",
+      hour: ""
+    }));
+  };
   useEffect(() => {
     if(params){
-      let temp = params.get('vnp_ResponseCode');
-      if (temp === '00') {
-        handleSubmit();
-        localStorage.removeItem('date');
-        localStorage.removeItem('hour');
-        localStorage.removeItem('seatNumber');
+      if(method == 1){
+        let temp = params.get('status');
+        if (temp === 'PAID') {
+          handleSubmit();
+        }
+        else if(temp === 'CANCELLED'){
+          toast.success("Hủy thanh toán thành công!");
+        }
+        else if(temp != null && temp != undefined){
+          toast.error("Đặt vé thất bại!");
+        }
+        resetBooking();
       }
-      else if(temp !== '00' && temp != null && temp != undefined){
-        toast.error("Đặt vé thất bại!");
+      else if(method == 2){
+        let temp = params.get('vnp_ResponseCode');
+        if (temp === '00') {
+          handleSubmit();
+        }
+        else if(temp === '24'){
+          toast.success("Hủy thanh toán thành công!");
+        }
+        else if(temp != null && temp != undefined){
+          toast.error("Đặt vé thất bại!");
+        }
+        resetBooking();
       }
-    }
-    else{
-      localStorage.removeItem('date');
-      localStorage.removeItem('hour');
-      localStorage.removeItem('seatNumber');
-      inputs.date = "";
-      inputs.hour = "";
-      inputs.seatNumber = "";
+      else{
+        resetBooking();
+      }
     }
   }, [params]);
   const handleSeatSelect = (index) => {
@@ -428,13 +467,22 @@ const MediaDetail = () => {
       .catch((err) => console.log(err));
     setOnRequest(false);
   };
-  const handlePayment = async () => {
-    if(!inputs.seatNumber)
-    {
-      toast.error("Chưa chọn vị trí ngồi!");
-      return;
+  const handleMethod1 = async () => {
+    setMethod(1);
+    localStorage.setItem('method', 1);
+    setIsPayment(true);
+    const response = await axios.post(`${backEndUrl}/booking/create_payment`, { amount, id });
+    setIsPayment(false);
+    if (response.data.code === '00') { 
+        window.location.href = response.data.data;
     }
-    const response = await axios.post('https://webserver-rho.vercel.app/booking/create_payment_url', { amount, id });
+  };
+  const handleMethod2 = async () => {
+    setMethod(2);
+    localStorage.setItem('method', 2);
+    setIsPayment(true);
+    const response = await axios.post(`${backEndUrl}/booking/create_payment_url`, { amount, id });
+    setIsPayment(false);
     if (response.data.code === '00') { 
         window.location.href = response.data.data;
     }
@@ -564,6 +612,101 @@ const MediaDetail = () => {
                 </Box>
               </Box>
               {/* media content */}
+              <div>
+                <Modal
+                    open={isAppear}
+                    onClose={handleClose}
+                    >
+                  <Box sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: "100%",
+                    maxWidth: "600px",
+                    padding: 4,
+                    outline: "none"
+                  }}>
+                    <Box sx={{ padding: 4, boxShadow: 24, backgroundColor: "background.paper" }}>
+                      <Box sx={{ textAlign: "center", marginBottom: "2rem" }}>
+                        <Stack spacing={1} justifyContent={"center"} alignItems={"center"}>
+                          <Typography variant="h5">
+                            Thông tin đã chọn
+                          </Typography>
+                          <Typography variant="caption">
+                            Ngày chiếu phim: {dayjs(inputs.date).format("DD/MM/YYYY")}
+                          </Typography>
+                          <Typography variant="caption">
+                            Giờ chiếu phim: {inputs.hour}
+                          </Typography>
+                          <Typography variant="caption">
+                            Vị trí ghế: {inputs.seatNumber}
+                          </Typography>                               
+                        </Stack>
+                        <Stack borderRadius={"20px"} border={"2px solid green"} marginTop={4} justifyContent={"center"} alignItems={"center"}>
+                          <Typography variant="h5">
+                            Hãy chọn phương thức thanh toán
+                          </Typography>
+                          <LoadingButton
+                            variant="contained"
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              marginTop: 2,
+                              width: 'max-content',
+                              paddingRight: 2, // Add some padding to the right to accommodate the icon
+                            }}
+                            loading={isPayment}
+                            onClick={handleMethod1}
+                          >
+                            QRCODE
+                            <QrCodeIcon sx={{ marginLeft: 1 }} />
+                          </LoadingButton> 
+                          <LoadingButton
+                            variant="contained"
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              marginTop: 2,
+                              marginBottom: 2,
+                              width: 'max-content',
+                              paddingRight: 2, // Add some padding to the right to accommodate the icon
+                            }}
+                            loading={isPayment}
+                            onClick={handleMethod2}
+                          >
+                            VNPAYMENT
+                            <div
+                              style={{
+                                marginLeft: 8, // Space between text and image
+                                width: 24,
+                                height: 24,
+                                borderRadius: '50%',
+                                overflow: 'hidden',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                              }}
+                            >
+                              <img
+                                src="https://i.postimg.cc/CMvHpxMW/0oxhzjmxbksr1686814746087.png" // Replace with the URL of your image
+                                alt="QR Code"
+                                style={{
+                                  width: '100%',
+                                  height: '100%',
+                                  objectFit: 'cover',
+                                }}
+                              />
+                            </div>
+                          </LoadingButton> 
+                        </Stack>
+                      </Box>
+                    </Box>
+                  </Box>
+                </Modal>
+              </div>
               <div>
                 <Modal
                     open={isOpen}
@@ -711,7 +854,7 @@ const MediaDetail = () => {
                             <Box display="flex" justifyContent="center" >
                               <Box width={"80%"} marginTop={3}>
                                 <Box display="flex" justifyContent={"center"}>             
-                                  <Button onClick={handlePayment} sx={{bgcolor: "#add8e6",":hover": {bgcolor: "#121217"}, width: {xs: "20%", sm:"15%", md:"10%"}}}>
+                                  <Button onClick={handleOpen} sx={{bgcolor: "#add8e6",":hover": {bgcolor: "#121217"}, width: {xs: "20%", sm:"15%", md:"10%"}}}>
                                     Đặt vé
                                   </Button>                 
                                 </Box>
