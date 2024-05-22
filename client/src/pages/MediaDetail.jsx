@@ -241,7 +241,6 @@ const MediaDetail = () => {
     if(inputs.hour == "") return;
     if(inputs.seatNumber == "") return;
     console.log(inputs);
-    toast.success(`seat: ${inputs.seatNumber}, date: ${inputs.date}, hour: ${inputs.hour}`);
     setIsRequest(true);
     await newBooking({ ...inputs, movie: id })
       .then((res) => {toast.success("Đặt vé thành công!");
