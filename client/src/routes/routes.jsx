@@ -10,6 +10,7 @@ import AddedMovieList from "../pages/AddedMovieList.jsx";
 import ProtectedPageAdmin from "../components/common/ProtectedPageAdmin.jsx";
 import AddMovie from "../pages/AddMovie.jsx";
 import FixMovie from "../pages/FixMovie.jsx";
+import TicketPage from "../pages/TicketPage.jsx";
 import React from 'react';
 export const routesGen = {
   home: "/",
@@ -21,10 +22,15 @@ export const routesGen = {
   passwordUpdate: "/password-update",
   addMovie: "/addmovie",
   listMovie: "/listmovie",
+  ticket: (id) => `/ticket/${id}`,
   update: (id) => `/update/${id}`
 };
 
 const routes = [
+  {
+  path: "/ticket/:id",
+  element: <TicketPage />
+  },
   {
     index: true,
     element: <HomePage />,

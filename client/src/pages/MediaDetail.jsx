@@ -27,7 +27,7 @@ import dayjs from "dayjs";
 import axios from 'axios';
 import { BACKEND_URL } from "../configs/config.js";
 import userApi from "../api/modules/user.api.js";
-
+import Ticket from "../components/common/Ticket.jsx";
 const MediaDetail = () => {
   const backEndUrl = BACKEND_URL;
   const amount = 10000;
@@ -326,6 +326,7 @@ const MediaDetail = () => {
       date: ""
     }));
     getListBooking();
+    setIsAppear(false);
     setIsOpen(true);
   };
   const handleTimeSelect = (i) => {
@@ -951,38 +952,7 @@ const MediaDetail = () => {
                     padding: 4,
                     outline: "none"
                   }}>
-                    <Box sx={{ padding: 4, boxShadow: 24, backgroundColor: "background.paper" }}>
-                      <Box sx={{ textAlign: "center", marginBottom: "2rem" }}>
-                        <Stack spacing={1}>
-                          <Typography variant="h5">
-                            Thông tin vé
-                          </Typography>
-                          <Typography variant="caption">
-                            Mã số: {in4.id}
-                          </Typography>
-                          <Typography variant="caption">
-                            Thời gian đặt vé: {dayjs(in4.createdAt).format("HH:mm:ss DD/MM/YYYY")}
-                          </Typography>
-                          <Typography variant="caption">
-                            Ngày chiếu phim: {dayjs(in4.date).format("DD/MM/YYYY")}
-                          </Typography>
-                          <Typography variant="caption">
-                            Giờ chiếu phim: {in4.hour}
-                          </Typography>
-                          <Typography variant="caption">
-                            Vị trí ghế: {in4.seatNumber}
-                          </Typography>
-                          <Box justifyContent={"center"}>
-                          <Button 
-                            variant="contained" 
-                            sx={{marginTop: 2, width: "max-content"}}
-                            onClick={handleClose}
-                            >
-                            OK
-                          </Button></Box>              
-                        </Stack>
-                      </Box>
-                    </Box>
+                    <Ticket booking={in4} title={movie.title}/>
                   </Box>
                 </Modal>
               </div>

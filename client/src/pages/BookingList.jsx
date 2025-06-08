@@ -13,6 +13,7 @@ import { routesGen } from "../routes/routes.jsx";
 import {deleteBooking, getUserBooking } from "../api-helpers/api-helpers.js";
 import axios from "axios"; 
 import React from 'react';
+import Ticket from "../components/common/Ticket.jsx";
 
 const BookingItem = ({ booking, onRemoved, isActive }) => {
   const [onRequest, setOnRequest] = useState(false);
@@ -113,28 +114,8 @@ const BookingItem = ({ booking, onRemoved, isActive }) => {
               to={routesGen.mediaDetail(booking.movie.id)}
               style={{ color: "unset", textDecoration: "none" }}
             >
-              <Typography
-                variant="h6"
-                sx={{ ...uiConfigs.style.typoLines(1, "left") }}
-              >
-                {booking.movie.title}
-              </Typography>
             </Link>
-            <Typography variant="caption">
-              Mã số: {booking.id}
-            </Typography>
-            <Typography variant="caption">
-              Thời gian đặt vé: {dayjs(booking.createdAt).format("HH:mm:ss DD/MM/YYYY")}
-            </Typography>
-            <Typography variant="caption">
-              Ngày chiếu phim: {dayjs(booking.date).format("DD/MM/YYYY")}
-            </Typography>
-            <Typography variant="caption">
-              Giờ chiếu phim: {booking.hour}
-            </Typography>
-            <Typography variant="caption">
-              Vị trí ghế: {booking.seatNumber}
-            </Typography>
+            <Ticket booking={booking} title={booking.movie.title}/>
           </Stack>
         </Box>
 

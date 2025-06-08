@@ -45,6 +45,17 @@ export const getBookings = async (id) => {
   const resData = await res.data;
   return resData;
 };
+export const getTicket = async (id) => {
+  const res = await axios
+    .get(`/booking/ticket/${id}`)
+    .catch((err) => console.log(err));
+
+  if (res.status !== 200) {
+    return console.log("Unexpected Error");
+  }
+  const resData = await res.data;
+  return resData;
+};
 export const getFavorites = async (id) => {
   const res = await axios
     .get(`/favorite/${id}`)
