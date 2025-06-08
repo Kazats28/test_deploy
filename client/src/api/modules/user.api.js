@@ -1,5 +1,7 @@
 import privateClient from "../client/private.client.js";
 import publicClient from "../client/public.client.js";
+import axios from "axios";
+import { BACKEND_URL } from "../../configs/config.js";
 
 const userEndpoints = {
   signin: "user/signin",
@@ -46,6 +48,14 @@ const userApi = {
 
       return { response };
     } catch (err) { return { err }; }
+  },
+  signinWithGoogle: async (data) => {
+    try {
+      const response = await axios.post(`${BACKEND_URL}/user/google-login`, data);
+      return { response: response.data, err: null };
+    } catch (err) {
+      return { response: null, err: err.response.data };
+    }
   }
 };
 

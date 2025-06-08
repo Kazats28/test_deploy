@@ -32,16 +32,22 @@ const PasswordUpdate = () => {
     fetchUser();
   }, []);
 
+  // Kiểm tra user đã từng đặt mật khẩu chưa
+  const hasPassword = !!userInfo?.password;
+
   const form = useFormik({
+    enableReinitialize: true,
     initialValues: {
       password: "",
       newPassword: "",
       confirmNewPassword: ""
     },
     validationSchema: Yup.object({
-      password: Yup.string()
-        .min(8, "Mật khẩu phải có ít nhất 8 kí tự.")
-        .required("Hãy nhập mật khẩu cũ."),
+      password: hasPassword
+        ? Yup.string()
+            .min(8, "Mật khẩu phải có ít nhất 8 kí tự.")
+            .required("Hãy nhập mật khẩu cũ.")
+        : Yup.string(),
       newPassword: Yup.string()
         .min(8, "Mật khẩu mới phải có ít nhất 8 kí tự.")
         .required("Hãy nhập mật khẩu mới."),
@@ -57,7 +63,12 @@ const PasswordUpdate = () => {
     if (onRequest) return;
     setOnRequest(true);
 
-    const { response, err } = await userApi.passwordUpdate(values);
+    // Nếu user chưa từng đặt mật khẩu, không gửi trường password
+    const payload = hasPassword
+      ? values
+      : { newPassword: values.newPassword, confirmNewPassword: values.confirmNewPassword };
+
+    const { response, err } = await userApi.passwordUpdate(payload);
 
     setOnRequest(false);
 
@@ -100,30 +111,32 @@ const PasswordUpdate = () => {
         {showForm && (
           <Box component="form" maxWidth="400px" onSubmit={form.handleSubmit}>
             <Stack spacing={2}>
-              <TextField
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Mật khẩu cũ"
-                name="password"
-                fullWidth
-                value={form.values.password}
-                onChange={form.handleChange}
-                color="success"
-                error={form.touched.password && form.errors.password !== undefined}
-                helperText={form.touched.password && form.errors.password}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={() => setShowPassword(!showPassword)}
-                        edge="end"
-                        tabIndex={-1}
-                      >
-                        {showPassword ? <Visibility /> : <VisibilityOff />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
+              {hasPassword && (
+                <TextField
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Mật khẩu cũ"
+                  name="password"
+                  fullWidth
+                  value={form.values.password}
+                  onChange={form.handleChange}
+                  color="success"
+                  error={form.touched.password && form.errors.password !== undefined}
+                  helperText={form.touched.password && form.errors.password}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={() => setShowPassword(!showPassword)}
+                          edge="end"
+                          tabIndex={-1}
+                        >
+                          {showPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              )}
               <TextField
                 type={showPassword1 ? 'text' : 'password'}
                 placeholder="Mật khẩu mới"

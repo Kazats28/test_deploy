@@ -10,6 +10,8 @@ import { setAuthModalOpen } from "../../redux/features/authModalSlice.js";
 import { setUser } from "../../redux/features/userSlice.js";
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import React from 'react';
+import { GoogleLogin } from '@react-oauth/google';
+
 const SigninForm = ({ switchAuthState }) => {
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState();
@@ -45,6 +47,25 @@ const SigninForm = ({ switchAuthState }) => {
       if (err) setErrorMessage(err.message);
     }
   });
+
+  const handleGoogleLoginSuccess = async (credentialResponse) => {
+    try {
+      setIsLoginRequest(true);
+      setErrorMessage(undefined);
+      // Gửi credential lên backend để xác thực
+      const { response, err } = await userApi.signinWithGoogle({ credential: credentialResponse.credential });
+      setIsLoginRequest(false);
+      if (response) {
+        dispatch(setUser(response));
+        dispatch(setAuthModalOpen(false));
+        toast.success("Đăng nhập Google thành công!");
+      }
+      if (err) setErrorMessage(err.message);
+    } catch (err) {
+      setIsLoginRequest(false);
+      setErrorMessage("Đăng nhập Google thất bại!");
+    }
+  };
 
   return (
     <Box component="form" onSubmit={signinForm.handleSubmit}>
@@ -86,24 +107,33 @@ const SigninForm = ({ switchAuthState }) => {
         />
       </Stack>
 
-      <LoadingButton
-        type="submit"
-        fullWidth
-        size="large"
-        variant="contained"
-        sx={{ marginTop: 4 }}
-        loading={isLoginRequest}
-      >
-        đăng nhập
-      </LoadingButton>
+      <Stack spacing={2} mt={4}>
+        <LoadingButton
+          type="submit"
+          fullWidth
+          size="large"
+          variant="contained"
+          loading={isLoginRequest}
+        >
+          đăng nhập
+        </LoadingButton>
 
-      <Button
-        fullWidth
-        sx={{ marginTop: 1 }}
-        onClick={() => switchAuthState()}
-      >
-        đăng ký
-      </Button>
+        <Box sx={{ width: "100%" }}>
+          <GoogleLogin
+            onSuccess={handleGoogleLoginSuccess}
+            onError={() => setErrorMessage("Đăng nhập Google thất bại!")}
+            width="100%"
+          />
+        </Box>
+
+        <Button
+          fullWidth
+          variant="text"
+          onClick={() => switchAuthState()}
+        >
+          đăng ký
+        </Button>
+      </Stack>
 
       {errorMessage && (
         <Box sx={{ marginTop: 2 }}>
