@@ -118,11 +118,21 @@ const SigninForm = ({ switchAuthState }) => {
           đăng nhập
         </LoadingButton>
 
-        <Box sx={{ width: "100%" }}>
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            '& > div': {
+              width: '100% !important',
+              display: 'flex',
+              justifyContent: 'center'
+            }
+          }}
+        >
           <GoogleLogin
             onSuccess={handleGoogleLoginSuccess}
             onError={() => setErrorMessage("Đăng nhập Google thất bại!")}
-            width="100%"
           />
         </Box>
 
