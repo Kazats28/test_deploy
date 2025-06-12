@@ -11,7 +11,6 @@ router.post(
   "/signup",
   body("email")
     .exists().withMessage("Hãy nhập email.")
-    //.isLength({ min: 8 }).withMessage("username minimum 8 characters")
     .custom(async value => {
       const user = await userModel.findOne({ email: value });
       if (user) return Promise.reject("Email đã được đăng ký.");
@@ -37,7 +36,6 @@ router.post(
   "/signin",
   body("email")
     .exists().withMessage("Hãy nhập email."),
-    //.isLength({ min: 8 }).withMessage("username minimum 8 characters"),
   body("password")
     .exists().withMessage("Hãy nhập mật khẩu.")
     .isLength({ min: 8 }).withMessage("Mật khẩu phải có ít nhất 8 kí tự."),

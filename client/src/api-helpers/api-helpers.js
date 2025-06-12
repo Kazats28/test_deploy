@@ -74,7 +74,7 @@ export const newBooking = async (data) => {
       seatNumber: data.seatNumber,
       hour: data.hour,
       date: data.date,
-      user: localStorage.getItem("userId") || "664362cd38bf8039e569c0e7",
+      user: localStorage.getItem("userId"),
     })
     .catch((err) => console.log(err));
 

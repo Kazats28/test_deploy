@@ -172,6 +172,9 @@ const MediaDetail = () => {
       const recommend = allMovies.filter(
         m => m.id !== id && m.genres?.some(g => relatedGenres.includes(g))
       );
+      if (recommend.length < 8) {
+        recommend.push(...allMovies);
+      }
       setRecommendedMovies(recommend.slice(0, 8));
     } catch (err) {
       console.log(err);
