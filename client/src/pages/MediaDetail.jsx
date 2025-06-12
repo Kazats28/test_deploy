@@ -173,7 +173,8 @@ const MediaDetail = () => {
         m => m.id !== id && m.genres?.some(g => relatedGenres.includes(g))
       );
       if (recommend.length < 8) {
-        recommend.push(...allMovies);
+        const remainingMovies = allMovies.filter(movie => !recommend.includes(movie));
+        recommend.push(...remainingMovies);
       }
       setRecommendedMovies(recommend.slice(0, 8));
     } catch (err) {
